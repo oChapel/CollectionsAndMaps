@@ -1,0 +1,2 @@
+rootProject.name = "Collections And Maps"
+include ':app'
