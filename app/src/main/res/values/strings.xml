@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">Collections And Maps</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="operationsTxt">Operations</string>
+    <string name="start">Start</string>
+
+    <string-array name="collectionsArray">
+        <item>Adding to the start</item>
+        <item>Adding to the middle</item>
+        <item>Adding to the end</item>
+        <item>Search</item>
+        <item>Removing from the start</item>
+        <item>Removing from the middle</item>
+        <item>Removing from the end</item>
+    </string-array>
+
+    <string-array name="strArrayTypes">
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+        <item>in ArrayList</item>
+        <item>in LinkedInList</item>
+        <item>in CopyOnWriterList</item>
+    </string-array>
+
+    <string-array name="mapsArray">
+        <item>Adding new</item>
+        <item>Search by key</item>
+        <item>Removing</item>
+    </string-array>
 </resources>
