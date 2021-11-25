@@ -4,6 +4,14 @@
     <string name="operationsTxt">Operations</string>
     <string name="start">Start</string>
 
+    <string name="startingCalc">Starting calculations</string>
+    <string name="NAms">N/A ms</string>
+
+    <string-array name="collectionsMapsTXT">
+        <item>Collections</item>
+        <item>Maps</item>
+    </string-array>
+
     <string-array name="collectionsArray">
         <item>Adding to the start</item>
         <item>Adding to the middle</item>

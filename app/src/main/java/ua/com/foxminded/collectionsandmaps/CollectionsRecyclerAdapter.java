@@ -1,7 +1,5 @@
 package ua.com.foxminded.collectionsandmaps;
 
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
-    String[] data;
-    Handler handler;
-    Message msg;
+    ArrayList<String> data;
 
-    public CollectionsRecyclerAdapter(String[] itemNamesStr, Message message) {
-        data = itemNamesStr;
-        msg = message;
-    }
+    public CollectionsRecyclerAdapter() {}
 
     @NonNull
     @Override
@@ -31,14 +27,12 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
 
     @Override
     public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
-        holder.arrayType.setText(data[position]);
-        holder.progressBar.setVisibility(View.INVISIBLE);
-        holder.calcTime.setText("N/A ms");
+        holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return 18;
     }
 
     class CollectionsHolder extends RecyclerView.ViewHolder {
@@ -52,6 +46,12 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
             arrayType = itemView.findViewById(R.id.arrayType);
             progressBar = itemView.findViewById(R.id.progressBar);
             calcTime = itemView.findViewById(R.id.calcTime);
+        }
+
+        public void bind(int position) {
+            data = new ArrayList<>(Arrays.asList(itemView.getContext().getResources().getStringArray(R.array.strArrayTypes)));
+            arrayType.setText(data.get(position));
+            calcTime.setText(R.string.NAms);
         }
     }
 }
