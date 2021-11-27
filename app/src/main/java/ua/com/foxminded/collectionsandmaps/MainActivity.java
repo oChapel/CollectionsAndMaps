@@ -7,11 +7,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TabLayoutMediator tabLayoutMediator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +28,18 @@ public class MainActivity extends AppCompatActivity {
         FragmentAdapter adapter = new FragmentAdapter(fm, getLifecycle());
         pager2.setAdapter(adapter);
 
-        new TabLayoutMediator(tabLayout, pager2, new TabLayoutMediator.TabConfigurationStrategy() {
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]);
             }
-        }).attach();
+        });
+        tabLayoutMediator.attach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        tabLayoutMediator.detach();
     }
 }

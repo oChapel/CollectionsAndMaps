@@ -21,12 +21,10 @@ import java.util.List;
 
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
-    final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
+    private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
 
-    RecyclerView recyclerView;
     String[] arrayTypes;
     EditText sizeOperations;
-    Button startButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,16 +37,18 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
-        startButton = view.findViewById(R.id.startButton);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(collectionsAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        Button startButton = view.findViewById(R.id.startButton);
+        startButton.setOnClickListener(this);
+
         sizeOperations = view.findViewById(R.id.operationsInput);
 
-        Message msg = new Message();
-
         arrayTypes = getResources().getStringArray(R.array.strArrayTypes);
-        recyclerView.setAdapter(collectionsAdapter);
-        startButton.setOnClickListener(this);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        Message msg = new Message();
     }
 
     @Override

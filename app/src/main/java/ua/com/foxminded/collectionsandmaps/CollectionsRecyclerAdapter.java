@@ -1,8 +1,11 @@
 package ua.com.foxminded.collectionsandmaps;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -10,13 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
-    ArrayList<String> data;
+    ProgressBar progressBar;
+    List<Items> items = Items.generateCollectionItems(new ArrayList<>(), progressBar);
 
-    public CollectionsRecyclerAdapter() {}
+    public CollectionsRecyclerAdapter() {
+    }
 
     @NonNull
     @Override
@@ -27,12 +32,14 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
 
     @Override
     public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
-        holder.bind(position);
+        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), android.R.anim.fade_out);
+        holder.itemView.startAnimation(animation);
+        holder.bind(items.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 18;
+        return items.size();
     }
 
     class CollectionsHolder extends RecyclerView.ViewHolder {
@@ -48,10 +55,9 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
             calcTime = itemView.findViewById(R.id.calcTime);
         }
 
-        public void bind(int position) {
-            data = new ArrayList<>(Arrays.asList(itemView.getContext().getResources().getStringArray(R.array.strArrayTypes)));
-            arrayType.setText(data.get(position));
-            calcTime.setText(R.string.NAms);
+        public void bind(@NonNull Items item) {
+            arrayType.setText(item.name);
+            calcTime.setText(item.calcResults);
         }
     }
 }
