@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,10 @@ import java.util.List;
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
+    private final String TAG = "TAG 1";
 
-    String[] arrayTypes;
     EditText sizeOperations;
+    String[] arrayTypes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,17 +55,38 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
 
-        int size = Integer.parseInt(sizeOperations.getText().toString());
+        if (sizeOperations.getText().toString().matches("")) {
+            sizeOperations.setError(getActivity().getApplicationContext().getResources().getString(R.string.emptyEditText));
+        } else {
 
-        Thread t1 = new Thread(new Runnable() {
-            final  List<Integer> arrayList = new ArrayList<>();
-            @Override
-            public void run() {
-                int time = (int) CollectionsOperations.calcAddingToStart(size, arrayList);
-            }
-        });
-        t1.start();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
+
+            int size = Integer.parseInt(sizeOperations.getText().toString());
+            Log.i(TAG, "Size - " + size);
+
+            Thread t1 = new Thread(new Runnable() {
+                final  List<Integer> arrayList = new ArrayList<>();
+                @Override
+                public void run() {
+                    int time = (int) CollectionsOperations.calcAddingToStart(size, arrayList);
+                }
+            });
+            t1.start();
+        }
+
     }
+
+    public static List<Items> generateCollectionItems(List<Items> items) {
+
+        String[] arrayTypes = MainActivity.getAppContext().getResources().getStringArray(R.array.strArrayTypes);
+
+        for (int i = 0; i < 7; i++) {
+            for (String arrayType : arrayTypes) {
+                items.add(new Items(arrayType, MainActivity.getAppContext().getResources().getString(R.string.NAms), true));
+            }
+        }
+        return items;
+    }
+
 }

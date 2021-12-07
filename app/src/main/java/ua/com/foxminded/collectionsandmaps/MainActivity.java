@@ -7,7 +7,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -15,10 +14,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class MainActivity extends AppCompatActivity {
 
     private TabLayoutMediator tabLayoutMediator;
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.context = getApplicationContext();
+
         setContentView(R.layout.activity_main);
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -42,4 +44,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         tabLayoutMediator.detach();
     }
+
+    public static Context getAppContext() {
+        return MainActivity.context;
+    }
+
 }

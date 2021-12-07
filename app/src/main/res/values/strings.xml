@@ -5,6 +5,7 @@
     <string name="start">Start</string>
 
     <string name="startingCalc">Starting calculations</string>
+    <string name="emptyEditText">Enter number of operations</string>
     <string name="NAms">N/A ms</string>
 
     <string-array name="collectionsMapsTXT">
@@ -23,24 +24,6 @@
     </string-array>
 
     <string-array name="strArrayTypes">
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
         <item>in ArrayList</item>
         <item>in LinkedInList</item>
         <item>in CopyOnWriterList</item>

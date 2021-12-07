@@ -1,10 +1,8 @@
 package ua.com.foxminded.collectionsandmaps;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,8 +15,7 @@ import java.util.List;
 
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
-    ProgressBar progressBar;
-    List<Items> items = Items.generateCollectionItems(new ArrayList<>(), progressBar);
+    private final List<Items> items = CollectionsFragment.generateCollectionItems(new ArrayList<>());
 
     public CollectionsRecyclerAdapter() {
     }
@@ -32,8 +29,6 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
 
     @Override
     public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
-        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), android.R.anim.fade_out);
-        holder.itemView.startAnimation(animation);
         holder.bind(items.get(position));
     }
 
@@ -58,6 +53,7 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         public void bind(@NonNull Items item) {
             arrayType.setText(item.name);
             calcTime.setText(item.calcResults);
+            itemView.startAnimation(AnimationUtils.loadAnimation(itemView.getContext(), android.R.anim.fade_out));
         }
     }
 }

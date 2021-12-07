@@ -22,6 +22,7 @@
         android:id="@+id/operationsInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine2"
         app:layout_constraintStart_toEndOf="@id/guideLine1"
