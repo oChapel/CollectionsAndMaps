@@ -5,7 +5,7 @@
     <string name="start">Start</string>
 
     <string name="startingCalc">Starting calculations</string>
-    <string name="emptyEditText">Enter number of operations</string>
+    <string name="invalidInput">Invalid input</string>
     <string name="NAms">N/A ms</string>
 
     <string-array name="collectionsMapsTXT">

@@ -3,21 +3,24 @@ package ua.com.foxminded.collectionsandmaps;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
-    private final List<Items> items = CollectionsFragment.generateCollectionItems(new ArrayList<>());
+    private List<Items> items;
 
     public CollectionsRecyclerAdapter() {
+
+    }
+
+    public void setItems(List<Items> newItems) {
+        items = newItems;
     }
 
     @NonNull
@@ -53,7 +56,9 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         public void bind(@NonNull Items item) {
             arrayType.setText(item.name);
             calcTime.setText(item.calcResults);
-            itemView.startAnimation(AnimationUtils.loadAnimation(itemView.getContext(), android.R.anim.fade_out));
+            CollectionsFragment.setBooleanVisibility(progressBar, item.progressBarFlag);
+            itemView.setAlpha(0);
+            itemView.animate().alpha(1).setDuration(500);
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,12 @@ import java.util.List;
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
-    private final String TAG = "TAG 1";
 
     EditText sizeOperations;
-    String[] arrayTypes;
+
+    public CollectionsFragment() {
+        collectionsAdapter.setItems(generateCollectionItems());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,22 +49,19 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
 
         sizeOperations = view.findViewById(R.id.operationsInput);
 
-        arrayTypes = getResources().getStringArray(R.array.strArrayTypes);
-
         Message msg = new Message();
     }
 
     @Override
     public void onClick(View v) {
 
-        if (sizeOperations.getText().toString().matches("")) {
-            sizeOperations.setError(getActivity().getApplicationContext().getResources().getString(R.string.emptyEditText));
+        if (sizeOperations.getText().toString().isEmpty() | sizeOperations.getText().toString().equals(null)) {
+            sizeOperations.setError(getString(R.string.invalidInput));
         } else {
 
             Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
 
             int size = Integer.parseInt(sizeOperations.getText().toString());
-            Log.i(TAG, "Size - " + size);
 
             Thread t1 = new Thread(new Runnable() {
                 final  List<Integer> arrayList = new ArrayList<>();
@@ -77,16 +75,28 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
 
     }
 
-    public static List<Items> generateCollectionItems(List<Items> items) {
-
-        String[] arrayTypes = MainActivity.getAppContext().getResources().getStringArray(R.array.strArrayTypes);
-
+    public List<Items> generateCollectionItems() {
+        List<Items> items = new ArrayList<>();
+        String[] arrayTypes = getContext().getResources().getStringArray(R.array.strArrayTypes);
         for (int i = 0; i < 7; i++) {
             for (String arrayType : arrayTypes) {
-                items.add(new Items(arrayType, MainActivity.getAppContext().getResources().getString(R.string.NAms), true));
+                items.add(new Items(arrayType, getContext().getResources().getString(R.string.NAms), false));
             }
         }
         return items;
     }
 
+    public static void setBooleanVisibility(View view, boolean isVisible) {
+        if (isVisible) {
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sizeOperations.setError(null);
+    }
 }
