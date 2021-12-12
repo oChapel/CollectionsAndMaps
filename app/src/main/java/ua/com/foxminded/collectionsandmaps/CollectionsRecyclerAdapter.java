@@ -9,18 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
-    private List<Items> items;
+    private final List<Items> items = new ArrayList<>();
 
     public CollectionsRecyclerAdapter() {
-
     }
 
     public void setItems(List<Items> newItems) {
-        items = newItems;
+        this.items.clear();
+        this.items.addAll(newItems);
     }
 
     @NonNull
@@ -56,9 +57,8 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         public void bind(@NonNull Items item) {
             arrayType.setText(item.name);
             calcTime.setText(item.calcResults);
-            CollectionsFragment.setBooleanVisibility(progressBar, item.progressBarFlag);
-            itemView.setAlpha(0);
-            itemView.animate().alpha(1).setDuration(500);
+            calcTime.setAlpha(0);
+            calcTime.animate().alpha(1).setDuration(500);
         }
     }
 }

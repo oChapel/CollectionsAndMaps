@@ -23,11 +23,9 @@
         <item>Removing from the end</item>
     </string-array>
 
-    <string-array name="strArrayTypes">
-        <item>in ArrayList</item>
-        <item>in LinkedInList</item>
-        <item>in CopyOnWriterList</item>
-    </string-array>
+    <string name="arrayList">in ArrayList</string>
+    <string name="linkedList">in LinkedInList</string>
+    <string name="copyOnWriterList">in CopyOnWriterList</string>
 
     <string-array name="mapsArray">
         <item>Adding new</item>

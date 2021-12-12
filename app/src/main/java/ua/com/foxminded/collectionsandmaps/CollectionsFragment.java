@@ -9,12 +9,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +25,20 @@ import java.util.List;
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
+    private final String TAG1 = "Exception occurred";
 
-    EditText sizeOperations;
+    TextInputLayout sizeOperations;
+    TextInputEditText editSizeOperations;
 
-    public CollectionsFragment() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         collectionsAdapter.setItems(generateCollectionItems());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_collections, container, false);
     }
 
@@ -47,7 +53,8 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         Button startButton = view.findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
 
-        sizeOperations = view.findViewById(R.id.operationsInput);
+        sizeOperations = view.findViewById(R.id.textInputLayout);
+        editSizeOperations = view.findViewById(R.id.textInputEditText);
 
         Message msg = new Message();
     }
@@ -55,48 +62,41 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
-        if (sizeOperations.getText().toString().isEmpty() | sizeOperations.getText().toString().equals(null)) {
-            sizeOperations.setError(getString(R.string.invalidInput));
-        } else {
+        try {
 
+            int size = Integer.parseInt(editSizeOperations.getText().toString());
+            sizeOperations.setError(null);
             Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
 
-            int size = Integer.parseInt(sizeOperations.getText().toString());
-
             Thread t1 = new Thread(new Runnable() {
-                final  List<Integer> arrayList = new ArrayList<>();
+                final List<Integer> arrayList = new ArrayList<>();
+
                 @Override
                 public void run() {
                     int time = (int) CollectionsOperations.calcAddingToStart(size, arrayList);
                 }
             });
             t1.start();
+
+        } catch (NumberFormatException e) {
+            sizeOperations.setError(getString(R.string.invalidInput));
+            Log.i(TAG1, "Error: " + e);
         }
 
     }
 
     public List<Items> generateCollectionItems() {
         List<Items> items = new ArrayList<>();
-        String[] arrayTypes = getContext().getResources().getStringArray(R.array.strArrayTypes);
+        String arrayList = getContext().getResources().getString(R.string.arrayList);
+        String linkedList = getContext().getResources().getString(R.string.linkedList);
+        String copyOnWriterList = getContext().getResources().getString(R.string.copyOnWriterList);
+        String naMS = getContext().getResources().getString(R.string.NAms);
         for (int i = 0; i < 7; i++) {
-            for (String arrayType : arrayTypes) {
-                items.add(new Items(arrayType, getContext().getResources().getString(R.string.NAms), false));
-            }
+            items.add(new Items(arrayList, naMS, false));
+            items.add(new Items(linkedList, naMS, false));
+            items.add(new Items(copyOnWriterList, naMS, false));
         }
         return items;
     }
 
-    public static void setBooleanVisibility(View view, boolean isVisible) {
-        if (isVisible) {
-            view.setVisibility(View.VISIBLE);
-        } else {
-            view.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        sizeOperations.setError(null);
-    }
 }
