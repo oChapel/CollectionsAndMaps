@@ -3,25 +3,28 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="operationsTxt">Operations</string>
     <string name="start">Start</string>
+    <string name="stop">Stop</string>
 
     <string name="startingCalc">Starting calculations</string>
+    <string name="endingCalc">Calculations ended</string>
+    <string name="stopCalc">Calculations stopped</string>
+
     <string name="invalidInput">Invalid input</string>
     <string name="NAms">N/A ms</string>
+    <string name="ms"> ms</string>
 
     <string-array name="collectionsMapsTXT">
         <item>Collections</item>
         <item>Maps</item>
     </string-array>
 
-    <string-array name="collectionsArray">
-        <item>Adding to the start</item>
-        <item>Adding to the middle</item>
-        <item>Adding to the end</item>
-        <item>Search</item>
-        <item>Removing from the start</item>
-        <item>Removing from the middle</item>
-        <item>Removing from the end</item>
-    </string-array>
+    <string name="addToStart">Adding to the start</string>
+    <string name="addToMiddle">Adding to the middle</string>
+    <string name="addToEnd">Adding to the end</string>
+    <string name="search">Search</string>
+    <string name="remFromStart">Removing from the start</string>
+    <string name="remFromMiddle">Removing from the middle</string>
+    <string name="remFromEnd">Removing from the end</string>
 
     <string name="arrayList">in ArrayList</string>
     <string name="linkedList">in LinkedInList</string>

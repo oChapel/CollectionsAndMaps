@@ -57,8 +57,19 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         public void bind(@NonNull Items item) {
             arrayType.setText(item.name);
             calcTime.setText(item.calcResults);
-            calcTime.setAlpha(0);
             calcTime.animate().alpha(1).setDuration(500);
+            setBooleanVisibility(item.progressBarFlag);
         }
+
+        public void setBooleanVisibility(boolean flag) {
+            if (flag) {
+                calcTime.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+                calcTime.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 }
