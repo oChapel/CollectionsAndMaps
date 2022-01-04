@@ -22,6 +22,7 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
     public void setItems(List<Items> newItems) {
         this.items.clear();
         this.items.addAll(newItems);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -55,10 +56,12 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         }
 
         public void bind(@NonNull Items item) {
-            arrayType.setText(item.name);
-            calcTime.setText(item.calcResults);
+            arrayType.setText(itemView.getContext().getResources().getString(item.name));
+            calcTime.setText(new StringBuilder().append(item.calcResults).append(" ").
+                    append(itemView.getContext().getResources().getString(R.string.ms)));
             calcTime.animate().alpha(1).setDuration(500);
             setBooleanVisibility(item.progressBarFlag);
+            progressBar.animate().alpha(1).setDuration(500);
         }
 
         public void setBooleanVisibility(boolean flag) {

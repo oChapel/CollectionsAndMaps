@@ -1,6 +1,13 @@
 package ua.com.foxminded.collectionsandmaps;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,41 +15,31 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
-    private TextInputLayout sizeOperations;
-    private TextInputEditText editSizeOperations;
-    private Button startButton;
-    private Handler handler;
+    private final Handler handler = new Handler(Looper.myLooper());
 
-    private final int CALCULATIONS_ENDED = 100;
-    private final int CALCULATIONS_STOPPED = 101;
+    private ExecutorService es;
+    private TextInputLayout sizeOperations;
+    private TextInputLayout sizeThreads;
+    private TextInputEditText editSizeOperations;
+    private TextInputEditText editSizeThreads;
+    private int status = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        collectionsAdapter.setItems(generateCollectionItems());
+        collectionsAdapter.setItems(generateCollectionItems(false));
     }
 
     @Override
@@ -59,141 +56,91 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         recyclerView.setAdapter(collectionsAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        startButton = view.findViewById(R.id.startButton);
+        Button startButton = view.findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
-        startButton.setTag(1);
 
-        sizeOperations = view.findViewById(R.id.textInputLayout);
-        editSizeOperations = view.findViewById(R.id.textInputEditText);
+        sizeOperations = view.findViewById(R.id.textInputLayoutOperations);
+        sizeThreads = view.findViewById(R.id.textInputLayoutThreads);
+        editSizeOperations = view.findViewById(R.id.textInputEditTextOperations);
+        editSizeThreads = view.findViewById(R.id.textInputEditTextThreads);
 
-        handler = new Handler(Looper.myLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == CALCULATIONS_ENDED) {
-                    startButton.setText(getContext().getResources().getString(R.string.start));
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getResources().getText(R.string.endingCalc), Toast.LENGTH_SHORT).show();
-                } else if (msg.what == CALCULATIONS_STOPPED) {
-                    startButton.setText(getContext().getResources().getString(R.string.start));
-                    startButton.setEnabled(true);
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getResources().getText(R.string.stopCalc), Toast.LENGTH_SHORT).show();
-                } else {
-                    collectionsAdapter.notifyItemChanged(msg.what);
-                }
-            }
-        };
     }
 
     @Override
     public void onClick(View v) {
 
-        final int status = (Integer) v.getTag();
-        ExecutorService es = Executors.newFixedThreadPool(3);
+        Button button = (Button) v;
 
         if (status == 1) {
 
             try {
 
-                int size = Integer.parseInt(editSizeOperations.getText().toString());
-                sizeOperations.setError(null);
-                startButton.setText(getContext().getResources().getString(R.string.stop));
-                CollectionsOperations.setStopped(false);
-                v.setTag(0);
+                int threads = Integer.parseInt(editSizeThreads.getText().toString());
+                sizeThreads.setError(null);
+                es = Executors.newFixedThreadPool(threads);
 
-                Toast.makeText(getActivity().getApplicationContext(),
-                        getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
+                if (!es.isShutdown()) {
 
-                CountDownLatch latch = new CountDownLatch(3);
-                List<Items> list = generateCollectionItems();
-                String arrList = getContext().getResources().getString(R.string.arrayList);
-                String linkList = getContext().getResources().getString(R.string.linkedList);
-                String copyOnWrList = getContext().getResources().getString(R.string.copyOnWriterList);
-                String ms = getContext().getResources().getString(R.string.ms);
+                    try {
 
-                es.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateList(list, 0, new Items(arrList, "", true));
-                        int time = (int) CollectionsOperations.calcAddingToStart(size, new ArrayList<>());
-                        if (CollectionsOperations.isStopped()) {
-                            Thread.currentThread().interrupt();
-                        } else {
-                            updateList(list, 0, new Items(arrList, time + " " + ms, false));
+                        int size = Integer.parseInt(editSizeOperations.getText().toString());
+                        sizeOperations.setError(null);
+
+                        button.setText(getContext().getResources().getString(R.string.stop));
+                        status = 0;
+
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
+
+                        List<Items> list = generateCollectionItems(true);
+                        collectionsAdapter.setItems(list);
+                        AtomicInteger counter = new AtomicInteger(list.size());
+
+                        for (int i = 0; i < list.size(); i++) {
+                            int position = i;
+                            es.submit(() -> {
+                                Items item = CollectionsOperations.measureTime(position, size);
+                                counter.getAndDecrement();
+                                handler.post(() -> updateList(list, position, item));
+                                if (counter.get() == 0) {
+                                    handler.post(() -> {
+                                        button.setText(getContext().getResources().getString(R.string.start));
+                                        Toast.makeText(getActivity().getApplicationContext(),
+                                                getResources().getText(R.string.endingCalc), Toast.LENGTH_SHORT).show();
+                                    });
+                                    status = 1;
+                                }
+                            });
                         }
-                        latch.countDown();
+
+                        es.shutdown();
+
+                    } catch (NumberFormatException e) {
+                        sizeOperations.setError(getString(R.string.invalidInput));
                     }
-                });
-
-                es.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateList(list, 1, new Items(linkList, "", true));
-                        int time = (int) CollectionsOperations.calcAddingToStart(size, new LinkedList<>());
-                        if (CollectionsOperations.isStopped()) {
-                            Thread.currentThread().interrupt();
-                        } else {
-                            updateList(list, 1, new Items(linkList, time + " " + ms, false));
-                        }
-                        latch.countDown();
-                    }
-                });
-
-                es.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateList(list, 2, new Items(copyOnWrList, "", true));
-                        int time = (int) CollectionsOperations.calcAddingToStart(size, new CopyOnWriteArrayList<>());
-                        if (CollectionsOperations.isStopped()) {
-                            Thread.currentThread().interrupt();
-                        } else {
-                            updateList(list, 2, new Items(copyOnWrList, time + " " + ms, false));
-                        }
-                        latch.countDown();
-                    }
-                });
-
-                es.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            latch.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        if (CollectionsOperations.isStopped()) {
-                            handler.sendEmptyMessage(CALCULATIONS_STOPPED);
-                        } else {
-                            handler.sendEmptyMessage(CALCULATIONS_ENDED);
-                            v.setTag(1);
-                        }
-                    }
-                });
-
-                es.shutdown();
+                }
 
             } catch (NumberFormatException e) {
-                sizeOperations.setError(getString(R.string.invalidInput));
+                sizeThreads.setError(getString(R.string.invalidInput));
+            } catch (IllegalArgumentException e) {
+                sizeThreads.setError(getString(R.string.invalidNumber));
             }
+
 
         } else {
 
             es.shutdownNow();
-            CollectionsOperations.setStopped(true);
-            v.setEnabled(false);
-
-            collectionsAdapter.setItems(generateCollectionItems());
-            collectionsAdapter.notifyDataSetChanged();
-
-            v.setTag(1);
+            button.setText(getContext().getResources().getString(R.string.start));
+            collectionsAdapter.setItems(generateCollectionItems(false));
+            status = 1;
+            Toast.makeText(getActivity().getApplicationContext(),
+                    getResources().getText(R.string.stopCalc), Toast.LENGTH_SHORT).show();
 
         }
 
     }
 
-    public List<Items> generateCollectionItems() {
+    public List<Items> generateCollectionItems(boolean visibilityFlag) {
         List<Items> items = new ArrayList<>();
         int[] idArrCollectionsOperations = {R.string.addToStart, R.string.addToMiddle, R.string.addToEnd,
                 R.string.search, R.string.remFromStart, R.string.remFromMiddle, R.string.remFromEnd};
@@ -201,7 +148,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         String naMS = getContext().getResources().getString(R.string.NAms);
         for (int i = 0; i < idArrCollectionsOperations.length; i++) {
             for (int j : idArrCollectionsList) {
-                items.add(new Items(getContext().getResources().getString(j), naMS, false));
+                items.add(new Items(j, naMS, visibilityFlag));
             }
         }
         return items;
@@ -210,6 +157,5 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void updateList(List<Items> list, int position, Items item) {
         list.set(position, item);
         collectionsAdapter.setItems(list);
-        handler.sendEmptyMessage(position);
     }
 }
