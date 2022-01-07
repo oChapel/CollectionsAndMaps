@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CollectionsOperations {
 
-    private static final int randomNumber = new Random().nextInt(1000);
+    private static final Random random = new Random();
 
     public static Items measureTime(int operation, int listType, int size) {
         float time;
@@ -97,14 +97,14 @@ public class CollectionsOperations {
     }
 
     private static void fillNewList(int size, List<Integer> array) {
-        array.addAll(Collections.nCopies(size, randomNumber));
+        array.addAll(Collections.nCopies(size, random.nextInt(size)));
     }
 
     public static float calcAddingToStart(int size, List<Integer> array) {
 
         fillNewList(size, array);
         long start = System.nanoTime();
-        array.add(0, randomNumber);
+        array.add(0, random.nextInt(size));
         long end = System.nanoTime() - start;
 
         return (float)end / 1000000;
@@ -114,7 +114,7 @@ public class CollectionsOperations {
 
         fillNewList(size, array);
         long start = System.nanoTime();
-        array.add(array.size() / 2, randomNumber);
+        array.add(array.size() / 2, random.nextInt(size));
         long end = System.nanoTime() - start;
 
         return (float)end / 1000000;
@@ -124,17 +124,17 @@ public class CollectionsOperations {
 
         fillNewList(size, array);
         long start = System.nanoTime();
-        array.add(array.size(), randomNumber);
+        array.add(array.size(), random.nextInt(size));
         long end = System.nanoTime() - start;
 
         return (float)end / 1000000;
     }
 
     public static float searchByValue(int size, List<Integer> array) {
-
+        // TODO: fix random
         fillNewList(size, array);
         long start = System.nanoTime();
-        array.indexOf(randomNumber);
+        array.indexOf(random.nextInt(size));
         long end = System.nanoTime() - start;
 
         return (float) end / 1000000;

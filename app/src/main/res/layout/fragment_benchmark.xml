@@ -9,24 +9,24 @@
     <TextView
         android:id="@+id/operationsTxtView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:text="@string/operationsTxt"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/threadsTxtView"
         app:layout_constraintEnd_toStartOf="@id/guideLine1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@id/textInputLayoutOperations"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/threadsTxtView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:text="@string/threadsTxt"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/operationsTxtView"
-        app:layout_constraintBaseline_toBaselineOf="@id/textInputLayoutThreads"/>
+        app:layout_constraintTop_toBottomOf="@+id/operationsTxtView" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutOperations"
@@ -42,6 +42,7 @@
             android:id="@+id/textInputEditTextOperations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:background="@color/white"
             android:inputType="number">
 
@@ -63,6 +64,7 @@
             android:id="@+id/textInputEditTextThreads"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:background="@color/white"
             android:inputType="number">
 
