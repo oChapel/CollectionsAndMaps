@@ -27,12 +27,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentAdapter adapter = new FragmentAdapter(fm, getLifecycle());
         pager2.setAdapter(adapter);
 
-        tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]);
-            }
-        });
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) -> tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]));
         tabLayoutMediator.attach();
     }
 

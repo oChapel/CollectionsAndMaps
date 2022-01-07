@@ -13,7 +13,7 @@
     <string name="invalidInput">Invalid input</string>
     <string name="invalidNumber">Must not be zero</string>
     <string name="NAms">N/A</string>
-    <string name="ms"> ms</string>
+    <string name="ms">%1$s ms</string>
 
     <string-array name="collectionsMapsTXT">
         <item>Collections</item>

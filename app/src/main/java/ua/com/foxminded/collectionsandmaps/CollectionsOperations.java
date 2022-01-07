@@ -1,5 +1,6 @@
 package ua.com.foxminded.collectionsandmaps;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -9,168 +10,164 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CollectionsOperations {
 
-    public static Items measureTime(int position, int size) {
-        long time;
-        Items item = null;
-        switch (position) {
-            case 0:
-                time = calcAddingToStart(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 1:
-                time = calcAddingToStart(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 2:
-                time = calcAddingToStart(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 3:
-                time = calcAddingToMiddle(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 4:
-                time = calcAddingToMiddle(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 5:
-                time = calcAddingToMiddle(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 6:
-                time = calcAddingToEnd(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 7:
-                time = calcAddingToEnd(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 8:
-                time = calcAddingToEnd(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 9:
-                time = searchByValue(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 10:
-                time = searchByValue(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 11:
-                time = searchByValue(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 12:
-                time = calcRemovingFromBeginning(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 13:
-                time = calcRemovingFromBeginning(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 14:
-                time = calcRemovingFromBeginning(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 15:
-                time = calcRemovingFromMiddle(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 16:
-                time = calcRemovingFromMiddle(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 17:
-                time = calcRemovingFromMiddle(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
-            case 18:
-                time = calcRemovingFromEnd(size, new ArrayList<>());
-                item = new Items(R.string.arrayList, String.valueOf(time), false);
-                break;
-            case 19:
-                time = calcRemovingFromEnd(size, new LinkedList<>());
-                item = new Items(R.string.linkedList, String.valueOf(time), false);
-                break;
-            case 20:
-                time = calcRemovingFromEnd(size, new CopyOnWriteArrayList<>());
-                item = new Items(R.string.copyOnWriterList, String.valueOf(time), false);
-                break;
+    private static final int randomNumber = new Random().nextInt(1000);
 
+    public static Items measureTime(int operation, int listType, int size) {
+        float time;
+        Items item = null;
+        if (operation == R.string.addToStart) {
+            if (listType == R.string.arrayList) {
+                time = calcAddingToStart(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcAddingToStart(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcAddingToStart(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.addToMiddle) {
+            if (listType == R.string.arrayList) {
+                time = calcAddingToMiddle(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcAddingToMiddle(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcAddingToMiddle(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.addToEnd) {
+            if (listType == R.string.arrayList) {
+                time = calcAddingToEnd(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcAddingToEnd(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcAddingToEnd(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.search) {
+            if (listType == R.string.arrayList) {
+                time = searchByValue(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = searchByValue(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = searchByValue(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.remFromStart) {
+            if (listType == R.string.arrayList) {
+                time = calcRemovingFromBeginning(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcRemovingFromBeginning(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcRemovingFromBeginning(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.remFromMiddle) {
+            if (listType == R.string.arrayList) {
+                time = calcRemovingFromMiddle(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcRemovingFromMiddle(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcRemovingFromMiddle(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
+        } else if (operation == R.string.remFromEnd) {
+            if (listType == R.string.arrayList) {
+                time = calcRemovingFromEnd(size, new ArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.linkedList) {
+                time = calcRemovingFromEnd(size, new LinkedList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            } else if (listType == R.string.copyOnWriterList) {
+                time = calcRemovingFromEnd(size, new CopyOnWriteArrayList<>());
+                item = new Items(operation, listType, String.valueOf(time), false);
+            }
         }
         return item;
     }
 
-    private static int getRandomNumber() {
-        return new Random().nextInt(1000);
-    }
-
     private static void fillNewList(int size, List<Integer> array) {
-        array.addAll(Collections.nCopies(size, getRandomNumber()));
+        array.addAll(Collections.nCopies(size, randomNumber));
     }
 
-    public static long calcAddingToStart(int size, List<Integer> array){
-        long start = System.currentTimeMillis();
+    public static float calcAddingToStart(int size, List<Integer> array) {
 
         fillNewList(size, array);
-        array.add(0, getRandomNumber());
+        long start = System.nanoTime();
+        array.add(0, randomNumber);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float)end / 1000000;
     }
 
-    public static long calcAddingToMiddle(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float calcAddingToMiddle(int size, List<Integer> array) {
 
         fillNewList(size, array);
-        array.add(array.size()/2, getRandomNumber());
+        long start = System.nanoTime();
+        array.add(array.size() / 2, randomNumber);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float)end / 1000000;
     }
 
-    public static long calcAddingToEnd(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float calcAddingToEnd(int size, List<Integer> array) {
 
         fillNewList(size, array);
-        array.add(array.size(), getRandomNumber());
+        long start = System.nanoTime();
+        array.add(array.size(), randomNumber);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float)end / 1000000;
     }
 
-    public static long searchByValue(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float searchByValue(int size, List<Integer> array) {
 
         fillNewList(size, array);
-        array.indexOf(getRandomNumber());
+        long start = System.nanoTime();
+        array.indexOf(randomNumber);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float) end / 1000000;
     }
 
-    public static long calcRemovingFromBeginning(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float calcRemovingFromBeginning(int size, List<Integer> array) {
 
         fillNewList(size, array);
+        long start = System.nanoTime();
         array.remove(0);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float) end / 1000000;
     }
 
-    public static long calcRemovingFromMiddle(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float calcRemovingFromMiddle(int size, List<Integer> array) {
 
         fillNewList(size, array);
-        array.remove(array.size()/2);
+        long start = System.nanoTime();
+        array.remove(array.size() / 2);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float)end / 1000000;
     }
 
-    public static long calcRemovingFromEnd(int size, List<Integer> array) {
-        long start = System.currentTimeMillis();
+    public static float calcRemovingFromEnd(int size, List<Integer> array) {
 
         fillNewList(size, array);
+        long start = System.nanoTime();
         array.remove(array.size() - 1);
+        long end = System.nanoTime() - start;
 
-        return System.currentTimeMillis() - start;
+        return (float)end / 1000000;
     }
 
 }

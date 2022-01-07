@@ -28,7 +28,7 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
     @NonNull
     @Override
     public CollectionsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_collection_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
         return new CollectionsHolder(view);
     }
 
@@ -42,11 +42,12 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         return items.size();
     }
 
-    class CollectionsHolder extends RecyclerView.ViewHolder {
+    static class CollectionsHolder extends RecyclerView.ViewHolder {
 
         final private TextView arrayType;
         final private ProgressBar progressBar;
         final private TextView calcTime;
+        final private int shortAnimationDuration = itemView.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         public CollectionsHolder(@NonNull View itemView) {
             super(itemView);
@@ -57,22 +58,29 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
 
         public void bind(@NonNull Items item) {
             arrayType.setText(itemView.getContext().getResources().getString(item.name));
-            calcTime.setText(new StringBuilder().append(item.calcResults).append(" ").
-                    append(itemView.getContext().getResources().getString(R.string.ms)));
-            calcTime.animate().alpha(1).setDuration(500);
-            setBooleanVisibility(item.progressBarFlag);
-            progressBar.animate().alpha(1).setDuration(500);
+            calcTime.setText(itemView.getContext().getResources()
+                    .getString(R.string.ms, item.calcResults));
+            setupVisibility(item.progressBarFlag);
         }
 
-        public void setBooleanVisibility(boolean flag) {
-            if (flag) {
-                calcTime.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-            } else {
-                progressBar.setVisibility(View.INVISIBLE);
-                calcTime.setVisibility(View.VISIBLE);
+        public void setupVisibility(boolean isVisible) {
+            final float progressTargetAlpha = isVisible ? 1F : 0F;
+            if (progressTargetAlpha != progressBar.getAlpha()) {
+                if (isVisible) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    calcTime.setVisibility(View.VISIBLE);
+                }
+                progressBar.animate().alpha(progressTargetAlpha)
+                        .setDuration(shortAnimationDuration)
+                        .withEndAction(isVisible ? null : () -> progressBar.setVisibility(View.INVISIBLE))
+                        .start();
+
+                calcTime.animate().alpha(1 - progressTargetAlpha)
+                        .withEndAction(isVisible ? () -> calcTime.setVisibility(View.INVISIBLE) : null)
+                        .setDuration(shortAnimationDuration)
+                        .start();
             }
         }
-
     }
 }
