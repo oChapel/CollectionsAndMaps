@@ -1,11 +1,10 @@
 package ua.com.foxminded.collectionsandmaps;
 
-import androidx.annotation.NonNull;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -27,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentAdapter adapter = new FragmentAdapter(fm, getLifecycle());
         pager2.setAdapter(adapter);
 
-        tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) -> tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]));
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) ->
+                tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]));
         tabLayoutMediator.attach();
     }
 

@@ -1,9 +1,5 @@
 package ua.com.foxminded.collectionsandmaps;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,10 +15,7 @@ public class FragmentAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (position == 1) {
-            return new MapsFragment();
-        }
-        return new CollectionsFragment();
+        return CollectionsFragment.newInstance(position);
     }
 
     @Override

@@ -26,6 +26,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String ARG_TYPE = "arg_type";
+
+    public static CollectionsFragment newInstance(int type) {
+        final Bundle b = new Bundle();
+        b.putInt(ARG_TYPE, type);
+        final CollectionsFragment f = new CollectionsFragment();
+        f.setArguments(b);
+        return f;
+    }
+
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
     private final Handler handler = new Handler(Looper.myLooper());
 
@@ -35,7 +45,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     private TextInputLayout sizeThreads;
     private TextInputEditText editSizeOperations;
     private TextInputEditText editSizeThreads;
-    private int status = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,9 +62,9 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(collectionsAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
 
         startButton = view.findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
@@ -64,95 +73,119 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         sizeThreads = view.findViewById(R.id.textInputLayoutThreads);
         editSizeOperations = view.findViewById(R.id.textInputEditTextOperations);
         editSizeThreads = view.findViewById(R.id.textInputEditTextThreads);
+    }
 
+    private int getSpanCount() {
+        final int type = getArguments().getInt(ARG_TYPE);
+        if (type == 0) {
+            return 3;
+        } else if (type == 1) {
+            return 2;
+        } else throw new RuntimeException("Unsupported type: " + type);
     }
 
     @Override
     public void onClick(View v) {
-        calculateTime(editSizeOperations.getText().toString(), editSizeThreads.getText().toString());
+        calculateTime(
+                editSizeOperations.getText().toString().trim(),
+                editSizeThreads.getText().toString().trim()
+        );
     }
 
     public void calculateTime(String collectionSize, String poolSize) {
-
-        if (status == 1) {
-
+        if (es == null) {
+            int threads;
             try {
-
-                int threads = Integer.parseInt(poolSize);
+                threads = Integer.parseInt(poolSize);
                 sizeThreads.setError(null);
                 es = Executors.newFixedThreadPool(threads);
-
             } catch (NullPointerException | NumberFormatException e) {
                 sizeThreads.setError(getString(R.string.invalidInput));
-                return;
+                threads = -1;
             } catch (IllegalArgumentException e) {
                 sizeThreads.setError(getString(R.string.invalidNumber));
-                return;
+                threads = -1;
             }
-
+            int size;
             try {
-
-                int size = Integer.parseInt(collectionSize);
+                size = Integer.parseInt(collectionSize);
                 sizeOperations.setError(null);
-
-                if (!(es == null)) {
-                    startButton.setText(getContext().getResources().getString(R.string.stop));
-                    status = 0;
-
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getResources().getText(R.string.startingCalc), Toast.LENGTH_SHORT).show();
-
-                    List<Items> list = generateCollectionItems(true);
-                    collectionsAdapter.setItems(list);
-                    AtomicInteger counter = new AtomicInteger(list.size());
-
-                    for (int i = 0; i < list.size(); i++) {
-                        int position = i;
-                        es.submit(() -> {
-                            Items item = CollectionsOperations.measureTime(list.get(position).operation,
-                                    list.get(position).name, size);
-                            counter.getAndDecrement();
-                            handler.post(() -> updateList(list, position, item));
-                            if (counter.get() == 0) {
-                                handler.post(() -> {
-                                    es.shutdown();
-                                    startButton.setText(getContext().getResources().getString(R.string.start));
-                                    Toast.makeText(getActivity().getApplicationContext(),
-                                            getResources().getText(R.string.endingCalc), Toast.LENGTH_SHORT).show();
-                                });
-                                status = 1;
-                            }
-                        });
-                    }
-                }
-
-
             } catch (NumberFormatException e) {
                 sizeOperations.setError(getString(R.string.invalidInput));
+                size = -1;
             }
+            if (threads > 0 && size > 0) {
+                startButton.setText(R.string.stop);
 
+                Toast.makeText(getContext(), R.string.startingCalc, Toast.LENGTH_SHORT).show();
 
+                final List<Items> list = generateCollectionItems(true);
+                collectionsAdapter.setItems(list);
+                final AtomicInteger counter = new AtomicInteger(list.size());
+                final int type = getArguments().getInt(ARG_TYPE);
+                final int benchmarkSize = size;
+                for (int i = 0; i < list.size(); i++) {
+                    final int position = i;
+                    es.submit(() -> {
+                        final Items item;
+                        if (type == 0) {
+                            item = CollectionsOperations.measureTime(
+                                    list.get(position), benchmarkSize
+                            );
+                        } else if (type == 1) {
+                            item = MapsOperations.measureTime(
+                                    list.get(position), benchmarkSize
+                            );
+                        } else throw new RuntimeException("Unsupported type: " + type);
+                        counter.getAndDecrement();
+                        handler.post(() -> updateList(list, position, item));
+                        if (counter.get() == 0) {
+                            handler.post(() -> stopPool(false));
+                        }
+                    });
+                }
+            }
         } else {
-
-            es.shutdownNow();
-            startButton.setText(getContext().getResources().getString(R.string.start));
+            stopPool(true);
             collectionsAdapter.setItems(generateCollectionItems(false));
-            status = 1;
-            Toast.makeText(getActivity().getApplicationContext(),
-                    getResources().getText(R.string.stopCalc), Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void stopPool(boolean forced) {
+        if (forced) {
+            es.shutdownNow();
+        } else {
+            es.shutdown();
         }
 
+        es = null;
+        startButton.setText(R.string.start);
+
+        Toast.makeText(
+                getContext(), forced ? R.string.stopCalc : R.string.endingCalc, Toast.LENGTH_SHORT
+        ).show();
     }
 
     public List<Items> generateCollectionItems(boolean visibilityFlag) {
-        List<Items> items = new ArrayList<>();
-        int[] idArrCollectionsOperations = {R.string.addToStart, R.string.addToMiddle, R.string.addToEnd,
-                R.string.search, R.string.remFromStart, R.string.remFromMiddle, R.string.remFromEnd};
-        int[] idArrCollectionsList = {R.string.arrayList, R.string.linkedList, R.string.copyOnWriterList};
-        String naMS = getContext().getResources().getString(R.string.NAms);
-        for (int operation : idArrCollectionsOperations) {
-            for (int listType : idArrCollectionsList) {
+        final int type = getArguments().getInt(ARG_TYPE);
+        final List<Items> items = new ArrayList<>();
+        final String naMS = getContext().getResources().getString(R.string.NAms);
+        int[] idArrOperations;
+        int[] idArrType;
+        if (type == 0) {
+            idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
+                    R.string.addToEnd, R.string.searchByValue, R.string.remFromStart,
+                    R.string.remFromMiddle, R.string.remFromEnd};
+            idArrType = new int[]{R.string.arrayList, R.string.linkedList, R.string.copyOnWriterList};
+        } else if (type == 1) {
+            idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
+                    R.string.remFromMap};
+            idArrType = new int[]{R.string.treeMap, R.string.hashMap};
+        } else {
+            throw new RuntimeException("Unsupported type: " + type);
+        }
+        for (int operation : idArrOperations) {
+            for (int listType : idArrType) {
                 items.add(new Items(operation, listType, naMS, visibilityFlag));
             }
         }
