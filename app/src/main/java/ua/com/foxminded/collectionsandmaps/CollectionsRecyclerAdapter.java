@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
+public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<Items> items = new ArrayList<>();
+    private final List<Integer> operations = new ArrayList<>();
 
     public CollectionsRecyclerAdapter() {
     }
@@ -25,16 +26,40 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
-    public CollectionsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
-        return new CollectionsHolder(view);
+    public void setOperations(List<Integer> operations) {
+        this.operations.addAll(operations);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
-        holder.bind(items.get(position));
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        if (viewType == 0) {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
+                return new CollectionsHolder(view);
+        } else {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation, parent, false);
+                return new OperationsHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case 0:
+                CollectionsHolder collectionsHolder = (CollectionsHolder)holder;
+                collectionsHolder.bind(items.get(position));
+                break;
+            case 1:
+                OperationsHolder operationsHolder = (OperationsHolder)holder;
+                operationsHolder.operation.setText(operations.get(position));
+                break;
+        }
     }
 
     @Override
@@ -82,5 +107,16 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
                         .start();
             }
         }
+    }
+
+    static class OperationsHolder extends RecyclerView.ViewHolder {
+
+        final private TextView operation;
+
+        public OperationsHolder(@NonNull View itemView) {
+            super(itemView);
+            operation = itemView.findViewById(R.id.recyclerViewOperation);
+        }
+
     }
 }
