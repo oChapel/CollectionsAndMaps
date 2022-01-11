@@ -21,6 +21,7 @@ public class CollectionsOperations {
         } else if (item.name == R.string.copyOnWriterList) {
             list = new CopyOnWriteArrayList<>(Collections.nCopies(size, 0));
         } else throw new RuntimeException("Unknown type: " + item.name);
+        list.add(randomNumber.nextInt(size), 1);
         float time;
         if (item.operation == R.string.addToStart) {
             time = calcAddingToStart(size, list);
@@ -70,7 +71,7 @@ public class CollectionsOperations {
     public static float searchByValue(List<Integer> array) {
 
         long start = System.nanoTime();
-        array.indexOf(0);
+        array.indexOf(1);
         long end = System.nanoTime() - start;
 
         return (float) end / 1000000;
