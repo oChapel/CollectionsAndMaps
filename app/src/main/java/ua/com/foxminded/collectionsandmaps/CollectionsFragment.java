@@ -48,7 +48,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         collectionsAdapter.setItems(generateCollectionItems(false));
-        collectionsAdapter.setOperations(generateOperationItems());
     }
 
     @Override
@@ -97,7 +96,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
             try {
                 threads = Integer.parseInt(poolSize);
                 sizeThreads.setError(null);
-                es = Executors.newFixedThreadPool(threads);
             } catch (NullPointerException | NumberFormatException e) {
                 sizeThreads.setError(getString(R.string.invalidInput));
                 threads = -1;
@@ -115,6 +113,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
             }
             if (threads > 0 && size > 0) {
                 startButton.setText(R.string.stop);
+                es = Executors.newFixedThreadPool(threads);
 
                 Toast.makeText(getContext(), R.string.startingCalc, Toast.LENGTH_SHORT).show();
 
@@ -189,29 +188,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
             }
         }
         return items;
-    }
-
-    public List<Integer> generateOperationItems() {
-        int[] ids = getOperationsIDs();
-        List<Integer> idList = new ArrayList<>();
-        for (int id : ids) {
-            idList.add(id);
-        }
-        return idList;
-    }
-
-    private int[] getOperationsIDs() {
-        final int type = getArguments().getInt(ARG_TYPE);
-        int[] idArrOperations = {};
-        if (type == 0) {
-            idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
-                    R.string.addToEnd, R.string.searchByValue, R.string.remFromStart,
-                    R.string.remFromMiddle, R.string.remFromEnd};
-        } else if (type == 1) {
-            idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
-                    R.string.remFromMap};
-        }
-        return idArrOperations;
     }
 
     public void updateList(List<Items> list, int position, Items item) {

@@ -7,27 +7,25 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
     private final List<Items> items = new ArrayList<>();
-    private final List<Integer> operations = new ArrayList<>();
 
     public CollectionsRecyclerAdapter() {
     }
 
     public void setItems(List<Items> newItems) {
+        ItemsDiffUtilCallback itemsDiffUtilCallback = new ItemsDiffUtilCallback(items, newItems);
+        DiffUtil.DiffResult itemsDiffUtilResults = DiffUtil.calculateDiff(itemsDiffUtilCallback);
         this.items.clear();
         this.items.addAll(newItems);
-        notifyDataSetChanged();
-    }
-
-    public void setOperations(List<Integer> operations) {
-        this.operations.addAll(operations);
+        itemsDiffUtilResults.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -37,29 +35,14 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == 0) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
-            return new CollectionsHolder(view);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation, parent, false);
-            return new OperationsHolder(view);
-        }
+    public CollectionsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark,parent, false);
+        return new CollectionsHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()) {
-            case 0:
-                CollectionsHolder collectionsHolder = (CollectionsHolder) holder;
-                collectionsHolder.bind(items.get(position));
-                break;
-            case 1:
-                OperationsHolder operationsHolder = (OperationsHolder) holder;
-                operationsHolder.operation.setText(operations.get(position));
-                break;
-        }
+    public void onBindViewHolder(@NonNull CollectionsHolder holder, int position) {
+        holder.bind(items.get(position));
     }
 
     @Override
@@ -106,16 +89,6 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
                         .setDuration(shortAnimationDuration)
                         .start();
             }
-        }
-    }
-
-    static class OperationsHolder extends RecyclerView.ViewHolder {
-
-        final private TextView operation;
-
-        public OperationsHolder(@NonNull View itemView) {
-            super(itemView);
-            operation = itemView.findViewById(R.id.recyclerViewOperation);
         }
     }
 }

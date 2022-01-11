@@ -29,7 +29,7 @@ public class CollectionsOperations {
         } else if (item.operation == R.string.addToEnd) {
             time = calcAddingToEnd(size, list);
         } else if (item.operation == R.string.searchByValue) {
-            time = searchByValue(size, list);
+            time = searchByValue(list);
         } else if (item.operation == R.string.remFromStart) {
             time = calcRemovingFromBeginning(list);
         } else if (item.operation == R.string.remFromMiddle) {
@@ -67,10 +67,10 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float searchByValue(int size, List<Integer> array) {
-        // TODO: fix random
+    public static float searchByValue(List<Integer> array) {
+
         long start = System.nanoTime();
-        array.indexOf(randomNumber.nextInt(size));
+        array.indexOf(0);
         long end = System.nanoTime() - start;
 
         return (float) end / 1000000;
