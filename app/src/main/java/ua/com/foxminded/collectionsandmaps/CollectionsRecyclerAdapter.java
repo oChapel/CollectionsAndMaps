@@ -40,11 +40,11 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == 0) {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
-                return new CollectionsHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false);
+            return new CollectionsHolder(view);
         } else {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation, parent, false);
-                return new OperationsHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation, parent, false);
+            return new OperationsHolder(view);
         }
     }
 
@@ -52,11 +52,11 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case 0:
-                CollectionsHolder collectionsHolder = (CollectionsHolder)holder;
+                CollectionsHolder collectionsHolder = (CollectionsHolder) holder;
                 collectionsHolder.bind(items.get(position));
                 break;
             case 1:
-                OperationsHolder operationsHolder = (OperationsHolder)holder;
+                OperationsHolder operationsHolder = (OperationsHolder) holder;
                 operationsHolder.operation.setText(operations.get(position));
                 break;
         }
@@ -117,6 +117,5 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
             super(itemView);
             operation = itemView.findViewById(R.id.recyclerViewOperation);
         }
-
     }
 }

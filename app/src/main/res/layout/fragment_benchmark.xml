@@ -10,8 +10,8 @@
         android:id="@+id/operationsTxtView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="@string/operationsTxt"
         android:gravity="center"
+        android:text="@string/operationsTxt"
         app:layout_constraintBottom_toTopOf="@id/threadsTxtView"
         app:layout_constraintEnd_toStartOf="@id/guideLine1"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,8 +21,8 @@
         android:id="@+id/threadsTxtView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="@string/threadsTxt"
         android:gravity="center"
+        android:text="@string/threadsTxt"
         app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine1"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,17 +33,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:errorEnabled="true"
-        app:layout_constraintStart_toEndOf="@id/guideLine1"
+        app:layout_constraintBottom_toTopOf="@id/textInputLayoutThreads"
         app:layout_constraintEnd_toStartOf="@id/guideLine2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textInputLayoutThreads">
+        app:layout_constraintStart_toEndOf="@id/guideLine1"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditTextOperations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:background="@color/white"
+            android:gravity="center"
             android:inputType="number">
 
         </com.google.android.material.textfield.TextInputEditText>
@@ -55,17 +55,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:errorEnabled="true"
-        app:layout_constraintStart_toEndOf="@id/guideLine1"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine2"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutOperations"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView">
+        app:layout_constraintStart_toEndOf="@id/guideLine1"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutOperations">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditTextThreads"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:background="@color/white"
+            android:gravity="center"
             android:inputType="number">
 
         </com.google.android.material.textfield.TextInputEditText>

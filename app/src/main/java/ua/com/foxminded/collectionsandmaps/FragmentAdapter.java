@@ -23,4 +23,3 @@ public class FragmentAdapter extends FragmentStateAdapter {
         return 2;
     }
 }
-

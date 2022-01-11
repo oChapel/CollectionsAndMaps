@@ -23,13 +23,13 @@ public class CollectionsOperations {
         } else throw new RuntimeException("Unknown type: " + item.name);
         float time;
         if (item.operation == R.string.addToStart) {
-            time = calcAddingToStart(size,list);
+            time = calcAddingToStart(size, list);
         } else if (item.operation == R.string.addToMiddle) {
-            time = calcAddingToMiddle(size,list);
+            time = calcAddingToMiddle(size, list);
         } else if (item.operation == R.string.addToEnd) {
-            time = calcAddingToEnd(size,list);
+            time = calcAddingToEnd(size, list);
         } else if (item.operation == R.string.searchByValue) {
-            time = searchByValue(size,list);
+            time = searchByValue(size, list);
         } else if (item.operation == R.string.remFromStart) {
             time = calcRemovingFromBeginning(list);
         } else if (item.operation == R.string.remFromMiddle) {
@@ -46,7 +46,7 @@ public class CollectionsOperations {
         array.add(0, randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
 
-        return (float)end / 1000000;
+        return (float) end / 1000000;
     }
 
     public static float calcAddingToMiddle(int size, List<Integer> array) {
@@ -55,7 +55,7 @@ public class CollectionsOperations {
         array.add(array.size() / 2, randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
 
-        return (float)end / 1000000;
+        return (float) end / 1000000;
     }
 
     public static float calcAddingToEnd(int size, List<Integer> array) {
@@ -64,7 +64,7 @@ public class CollectionsOperations {
         array.add(array.size(), randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
 
-        return (float)end / 1000000;
+        return (float) end / 1000000;
     }
 
     public static float searchByValue(int size, List<Integer> array) {
@@ -91,7 +91,7 @@ public class CollectionsOperations {
         array.remove(array.size() / 2);
         long end = System.nanoTime() - start;
 
-        return (float)end / 1000000;
+        return (float) end / 1000000;
     }
 
     public static float calcRemovingFromEnd(List<Integer> array) {
@@ -100,7 +100,6 @@ public class CollectionsOperations {
         array.remove(array.size() - 1);
         long end = System.nanoTime() - start;
 
-        return (float)end / 1000000;
+        return (float) end / 1000000;
     }
-
 }

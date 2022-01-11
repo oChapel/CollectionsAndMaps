@@ -13,5 +13,4 @@ public class Items {
         this.calcResults = calcResults;
         this.progressBarFlag = progressBarFlag;
     }
-
 }

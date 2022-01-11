@@ -27,6 +27,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_TYPE = "arg_type";
+    private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
+    private final Handler handler = new Handler(Looper.myLooper());
+    private ExecutorService es;
+    private Button startButton;
+    private TextInputLayout sizeOperations;
+    private TextInputLayout sizeThreads;
+    private TextInputEditText editSizeOperations;
+    private TextInputEditText editSizeThreads;
 
     public static CollectionsFragment newInstance(int type) {
         final Bundle b = new Bundle();
@@ -35,16 +43,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         f.setArguments(b);
         return f;
     }
-
-    private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
-    private final Handler handler = new Handler(Looper.myLooper());
-
-    private ExecutorService es;
-    private Button startButton;
-    private TextInputLayout sizeOperations;
-    private TextInputLayout sizeThreads;
-    private TextInputEditText editSizeOperations;
-    private TextInputEditText editSizeThreads;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
