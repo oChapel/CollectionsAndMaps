@@ -79,10 +79,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
             if (integer == R.string.startingCalc) {
                 Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
                 startButton.setText(R.string.stop);
-            } else if (integer == R.string.endingCalc) {
-                Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
-                startButton.setText(R.string.start);
-            } else if (integer == R.string.stopCalc) {
+            } else if (integer == R.string.endingCalc | integer == R.string.stopCalc) {
                 Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
                 startButton.setText(R.string.start);
             }
