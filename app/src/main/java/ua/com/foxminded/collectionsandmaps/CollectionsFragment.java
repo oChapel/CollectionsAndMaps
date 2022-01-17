@@ -22,7 +22,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     private static final String ARG_TYPE = "arg_type";
     private final CollectionsRecyclerAdapter collectionsAdapter = new CollectionsRecyclerAdapter();
 
-    private FragmentViewModel viewModel;
+    private CollectionsViewModel viewModel;
 
     private Button startButton;
     private TextInputLayout sizeOperations;
@@ -42,30 +42,14 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this,
-                new FragmentViewModelFactory(getArguments().getInt(ARG_TYPE)))
-                .get(FragmentViewModel.class);
+                new CollectionsViewModelFactory(getArguments().getInt(ARG_TYPE)))
+                .get(CollectionsViewModel.class);
         viewModel.init();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewModel.getItemsList().observe(getViewLifecycleOwner(), collectionsAdapter::setItems);
-        viewModel.getStatus().observe(getViewLifecycleOwner(), integer -> {
-            if (integer == null) {
-                return;
-            }
-            if (integer == 0) {
-                Toast.makeText(getContext(), R.string.startingCalc, Toast.LENGTH_SHORT).show();
-                startButton.setText(R.string.stop);
-            } else if (integer == 1) {
-                Toast.makeText(getContext(), R.string.endingCalc, Toast.LENGTH_SHORT).show();
-                startButton.setText(R.string.start);
-            } else if (integer == 2) {
-                Toast.makeText(getContext(), R.string.stopCalc, Toast.LENGTH_SHORT).show();
-                startButton.setText(R.string.start);
-            }
-        });
         return inflater.inflate(R.layout.fragment_benchmark, container, false);
     }
 
@@ -73,9 +57,40 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel.getItemsList().observe(getViewLifecycleOwner(), collectionsAdapter::setItems);
+        viewModel.getSizeErrorStatus().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == null) {
+                sizeOperations.setError(null);
+            } else {
+                sizeOperations.setError(getString(integer));
+            }
+        });
+        viewModel.getPoolErrorStatus().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == null) {
+                sizeThreads.setError(null);
+            } else {
+                sizeThreads.setError(getString(integer));
+            }
+        });
+        viewModel.getToastStatus().observe(getViewLifecycleOwner(), integer -> {
+            if (integer == null) {
+                return;
+            }
+            if (integer == R.string.startingCalc) {
+                Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
+                startButton.setText(R.string.stop);
+            } else if (integer == R.string.endingCalc) {
+                Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
+                startButton.setText(R.string.start);
+            } else if (integer == R.string.stopCalc) {
+                Toast.makeText(getContext(), integer, Toast.LENGTH_SHORT).show();
+                startButton.setText(R.string.start);
+            }
+        });
+
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(collectionsAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), viewModel.getSpanCount()));
 
         startButton = view.findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
@@ -86,44 +101,10 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         editSizeThreads = view.findViewById(R.id.textInputEditTextThreads);
     }
 
-    private int getSpanCount() {
-        final int type = getArguments().getInt(ARG_TYPE);
-        if (type == 0) {
-            return 3;
-        } else if (type == 1) {
-            return 2;
-        } else throw new RuntimeException("Unsupported type: " + type);
-    }
-
     @Override
     public void onClick(View v) {
         String collectionSize = editSizeOperations.getText().toString().trim();
         String poolSize = editSizeThreads.getText().toString().trim();
-        startCalculations(collectionSize, poolSize);
-    }
-
-    public void startCalculations(String collectionSize, String poolSize) {
-        int threads;
-        try {
-            threads = Integer.parseInt(poolSize);
-            sizeThreads.setError(null);
-        } catch (NullPointerException | NumberFormatException e) {
-            sizeThreads.setError(getString(R.string.invalidInput));
-            threads = -1;
-        }
-        if (threads == 0){
-            sizeThreads.setError(getString(R.string.invalidNumber));
-        }
-        int size;
-        try {
-            size = Integer.parseInt(collectionSize);
-            sizeOperations.setError(null);
-        } catch (NumberFormatException e) {
-            sizeOperations.setError(getString(R.string.invalidInput));
-            size = -1;
-        }
-        if (threads > 0 && size > 0) {
-            viewModel.calculateTime(size, threads);
-        }
+        viewModel.calculateTime(collectionSize, poolSize);
     }
 }
