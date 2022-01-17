@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Collections And Maps</string>
+
+    <string-array name="collectionsMapsTXT">
+        <item>Collections</item>
+        <item>Maps</item>
+    </string-array>
+
+    <string name="operationsTxt">Operations</string>
+    <string name="threadsTxt">Threads</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
+    <string name="startingCalc">Starting calculations</string>
+    <string name="endingCalc">Calculations ended</string>
+    <string name="stopCalc">Calculations stopped</string>
+
+    <string name="invalidInput">Invalid input</string>
+    <string name="invalidNumber">Must not be zero</string>
+    <string name="NAms">N/A</string>
+    <string name="ms">%1$s ms</string>
+
+    <string name="addToStart">Adding to the start</string>
+    <string name="addToMiddle">Adding to the middle</string>
+    <string name="addToEnd">Adding to the end</string>
+    <string name="searchByValue">Search by value</string>
+    <string name="remFromStart">Removing from the start</string>
+    <string name="remFromMiddle">Removing from the middle</string>
+    <string name="remFromEnd">Removing from the end</string>
+
+    <string name="arrayList">in ArrayList</string>
+    <string name="linkedList">in LinkedInList</string>
+    <string name="copyOnWriterList">in CopyOnWriterList</string>
+
+    <string name="addToMap">Adding new</string>
+    <string name="searchByKey">Search by key</string>
+    <string name="remFromMap">Removing</string>
+
+    <string name="treeMap">in TreeMap</string>
+    <string name="hashMap">in HashMap</string>
+</resources>
