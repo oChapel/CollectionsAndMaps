@@ -19,9 +19,9 @@ public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFa
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(CollectionsViewModel.class)) {
             if (type == 0) {
-                return (T) new CollectionsViewModel(new CollectionsCalcUtils());
+                return (T) new CollectionsViewModel(new CalcUtilsImpl.CollectionsCalcUtils());
             } else if (type == 1) {
-                return (T) new CollectionsViewModel(new MapsCalcUtils());
+                return (T) new CollectionsViewModel(new CalcUtilsImpl.MapsCalcUtils());
             } else throw new RuntimeException("Unsupported type: " + type);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
