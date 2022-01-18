@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionsViewModel extends ViewModel {
 
-    private final CalcUtils calcUtils;
+    private final CalcTypeDependence calcTypeDependence;
     private final Handler handler = new Handler(Looper.myLooper());
     private ExecutorService es;
 
@@ -24,8 +24,8 @@ public class CollectionsViewModel extends ViewModel {
     private final MutableLiveData<Integer> sizeErrorStatus = new MutableLiveData<>();
     private final MutableLiveData<Integer> poolErrorStatus = new MutableLiveData<>();
 
-    public CollectionsViewModel(CalcUtils calcUtils) {
-        this.calcUtils = calcUtils;
+    public CollectionsViewModel(CalcTypeDependence calcTypeDependence) {
+        this.calcTypeDependence = calcTypeDependence;
     }
 
     public void init() {
@@ -33,7 +33,7 @@ public class CollectionsViewModel extends ViewModel {
         if (itemsList.getValue() != null) {
             return;
         }
-        itemsList.setValue(calcUtils.generateCollectionItems(false));
+        itemsList.setValue(calcTypeDependence.generateCollectionItems(false));
     }
 
     public void calculateTime(String collectionSize, String poolSize) {
@@ -41,7 +41,7 @@ public class CollectionsViewModel extends ViewModel {
         try {
             threads = Integer.parseInt(poolSize);
             poolErrorStatus.setValue(null);
-        } catch (NullPointerException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
             poolErrorStatus.setValue(R.string.invalidInput);
             threads = -1;
         }
@@ -62,14 +62,14 @@ public class CollectionsViewModel extends ViewModel {
                 es = Executors.newFixedThreadPool(threads);
                 toastStatus.setValue(R.string.startingCalc);
 
-                final List<Items> list = calcUtils.generateCollectionItems(true);
+                final List<Items> list = calcTypeDependence.generateCollectionItems(true);
                 itemsList.setValue(list);
                 final AtomicInteger counter = new AtomicInteger(list.size());
                 final int benchmarkSize = size;
                 for (int i = 0; i < list.size(); i++) {
                     final int position = i;
                     es.submit(() -> {
-                        final Items item = calcUtils.measureTime(list, position, benchmarkSize);
+                        final Items item = calcTypeDependence.measureTime(list.get(position), benchmarkSize);
                         counter.getAndDecrement();
                         handler.post(() -> updateList(list, position, item));
                         if (counter.get() == 0) {
@@ -80,7 +80,7 @@ public class CollectionsViewModel extends ViewModel {
 
             } else {
                 stopPool(true);
-                itemsList.setValue(calcUtils.generateCollectionItems(false));
+                itemsList.setValue(calcTypeDependence.generateCollectionItems(false));
             }
         }
     }
@@ -101,7 +101,7 @@ public class CollectionsViewModel extends ViewModel {
     }
 
     public int getSpanCount() {
-        return calcUtils.getSpanCount();
+        return calcTypeDependence.getSpanCount();
     }
 
     public LiveData<List<Items>> getItemsList() {

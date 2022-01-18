@@ -2,9 +2,9 @@ package ua.com.foxminded.collectionsandmaps;
 
 import java.util.List;
 
-public interface CalcUtils {
+public interface CalcTypeDependence {
 
-    Items measureTime(List<Items> list, int position, int benchmarkSize);
+    Items measureTime(Items item, int benchmarkSize);
 
     List<Items> generateCollectionItems(boolean visibilityFlag);
 

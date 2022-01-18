@@ -5,12 +5,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import androidx.annotation.NonNull;
 
-import dagger.internal.DaggerCollections;
-
 public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final int type;
-    private final CalcUtilsComponent component = DaggerCalcUtilsComponent.create();
+    private final TypeDependenceComponent component = DaggerTypeDependenceComponent.create();
 
     public CollectionsViewModelFactory(int type) {
         super();
@@ -22,9 +20,9 @@ public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFa
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(CollectionsViewModel.class)) {
             if (type == 0) {
-                return (T) new CollectionsViewModel(component.getCollectionsCalcUtils());
+                return (T) new CollectionsViewModel(component.getCollectionsTypeDependence());
             } else if (type == 1) {
-                return (T) new CollectionsViewModel(component.getMapsCalcUtils());
+                return (T) new CollectionsViewModel(component.getMapsTypeDependence());
             } else throw new RuntimeException("Unsupported type: " + type);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
