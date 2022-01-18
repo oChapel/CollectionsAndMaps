@@ -3,9 +3,15 @@ package ua.com.foxminded.collectionsandmaps;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CalcUtilsImpl {
 
     static class CollectionsCalcUtils implements CalcUtils {
+
+        @Inject
+        public CollectionsCalcUtils() {
+        }
 
         @Override
         public Items measureTime(List<Items> list, int position, int benchmarkSize) {
@@ -35,6 +41,10 @@ public class CalcUtilsImpl {
     }
 
     static class MapsCalcUtils implements CalcUtils {
+
+        @Inject
+        public MapsCalcUtils() {
+        }
 
         @Override
         public Items measureTime(List<Items> list, int position, int benchmarkSize) {
