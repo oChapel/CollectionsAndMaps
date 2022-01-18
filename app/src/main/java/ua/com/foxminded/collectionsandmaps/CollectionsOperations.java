@@ -1,6 +1,5 @@
 package ua.com.foxminded.collectionsandmaps;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
