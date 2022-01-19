@@ -2,7 +2,7 @@ package ua.com.foxminded.collectionsandmaps;
 
 import java.util.List;
 
-public interface CalcTypeDependence {
+public interface Benchmark {
 
     Items measureTime(Items item, int benchmarkSize);
 

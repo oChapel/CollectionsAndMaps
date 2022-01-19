@@ -7,11 +7,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class CollectionsOperations {
+import javax.inject.Inject;
+
+public class CollectionsBenchmark implements Benchmark {
 
     private static final Random randomNumber = new Random();
 
-    public static Items measureTime(Items item, int size) {
+    public CollectionsBenchmark() {
+    }
+
+    @Override
+    public Items measureTime(Items item, int size) {
         final List<Integer> list;
         if (item.name == R.string.arrayList) {
             list = new ArrayList<>(Collections.nCopies(size, 0));
@@ -40,7 +46,28 @@ public class CollectionsOperations {
         return new Items(item.operation, item.name, String.valueOf(time), false);
     }
 
-    public static float calcAddingToStart(int size, List<Integer> array) {
+    @Override
+    public List<Items> generateCollectionItems(boolean visibilityFlag) {
+        final List<Items> items = new ArrayList<>();
+        //final String naMS = getContext().getResources().getString(R.string.NAms);
+        int[] idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
+                R.string.addToEnd, R.string.searchByValue, R.string.remFromStart,
+                R.string.remFromMiddle, R.string.remFromEnd};
+        int[] idArrType = new int[]{R.string.arrayList, R.string.linkedList, R.string.copyOnWriterList};
+        for (int operation : idArrOperations) {
+            for (int listType : idArrType) {
+                items.add(new Items(operation, listType, "N/A"/*naMS*/, visibilityFlag));
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public int getSpanCount() {
+        return 3;
+    }
+
+    private static float calcAddingToStart(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(0, randomNumber.nextInt(size));
@@ -49,7 +76,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float calcAddingToMiddle(int size, List<Integer> array) {
+    private static float calcAddingToMiddle(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(array.size() / 2, randomNumber.nextInt(size));
@@ -58,7 +85,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float calcAddingToEnd(int size, List<Integer> array) {
+    private static float calcAddingToEnd(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(array.size(), randomNumber.nextInt(size));
@@ -67,7 +94,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float searchByValue(List<Integer> array) {
+    private static float searchByValue(List<Integer> array) {
 
         long start = System.nanoTime();
         array.indexOf(1);
@@ -76,7 +103,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float calcRemovingFromBeginning(List<Integer> array) {
+    private static float calcRemovingFromBeginning(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(0);
@@ -85,7 +112,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float calcRemovingFromMiddle(List<Integer> array) {
+    private static float calcRemovingFromMiddle(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(array.size() / 2);
@@ -94,7 +121,7 @@ public class CollectionsOperations {
         return (float) end / 1000000;
     }
 
-    public static float calcRemovingFromEnd(List<Integer> array) {
+   private static float calcRemovingFromEnd(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(array.size() - 1);
