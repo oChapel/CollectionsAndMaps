@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 public class MapsBenchmark implements Benchmark {
 
-    private static final Random randomNumber = new Random();
+    private final Random randomNumber = new Random();
 
     public MapsBenchmark() {
     }
@@ -62,7 +62,7 @@ public class MapsBenchmark implements Benchmark {
         }
     }
 
-    private static float addingToMap(int size, Map<Integer, Integer> map) {
+    private float addingToMap(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.put(size, randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
@@ -70,7 +70,7 @@ public class MapsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float searchByKey(int size, Map<Integer, Integer> map) {
+    private float searchByKey(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.get(randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
@@ -78,7 +78,7 @@ public class MapsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float removingFromMap(int size, Map<Integer, Integer> map) {
+    private float removingFromMap(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.remove(randomNumber.nextInt(size));
         long end = System.nanoTime() - start;

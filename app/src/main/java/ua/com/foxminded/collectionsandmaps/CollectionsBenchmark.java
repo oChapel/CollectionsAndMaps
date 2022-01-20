@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 public class CollectionsBenchmark implements Benchmark {
 
-    private static final Random randomNumber = new Random();
+    private final Random randomNumber = new Random();
 
     public CollectionsBenchmark() {
     }
@@ -67,7 +67,7 @@ public class CollectionsBenchmark implements Benchmark {
         return 3;
     }
 
-    private static float calcAddingToStart(int size, List<Integer> array) {
+    private float calcAddingToStart(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(0, randomNumber.nextInt(size));
@@ -76,7 +76,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float calcAddingToMiddle(int size, List<Integer> array) {
+    private float calcAddingToMiddle(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(array.size() / 2, randomNumber.nextInt(size));
@@ -85,7 +85,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float calcAddingToEnd(int size, List<Integer> array) {
+    private float calcAddingToEnd(int size, List<Integer> array) {
 
         long start = System.nanoTime();
         array.add(array.size(), randomNumber.nextInt(size));
@@ -94,7 +94,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float searchByValue(List<Integer> array) {
+    private float searchByValue(List<Integer> array) {
 
         long start = System.nanoTime();
         array.indexOf(1);
@@ -103,7 +103,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float calcRemovingFromBeginning(List<Integer> array) {
+    private float calcRemovingFromBeginning(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(0);
@@ -112,7 +112,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-    private static float calcRemovingFromMiddle(List<Integer> array) {
+    private float calcRemovingFromMiddle(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(array.size() / 2);
@@ -121,7 +121,7 @@ public class CollectionsBenchmark implements Benchmark {
         return (float) end / 1000000;
     }
 
-   private static float calcRemovingFromEnd(List<Integer> array) {
+   private float calcRemovingFromEnd(List<Integer> array) {
 
         long start = System.nanoTime();
         array.remove(array.size() - 1);
