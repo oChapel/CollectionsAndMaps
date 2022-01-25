@@ -26,9 +26,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
 
     private Button startButton;
     private TextInputLayout sizeOperations;
-    private TextInputLayout sizeThreads;
     private TextInputEditText editSizeOperations;
-    private TextInputEditText editSizeThreads;
 
     public static CollectionsFragment newInstance(int type) {
         final Bundle b = new Bundle();
@@ -65,13 +63,6 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
                 sizeOperations.setError(getString(integer));
             }
         });
-        viewModel.getPoolErrorStatus().observe(getViewLifecycleOwner(), integer -> {
-            if (integer == null) {
-                sizeThreads.setError(null);
-            } else {
-                sizeThreads.setError(getString(integer));
-            }
-        });
         viewModel.getToastStatus().observe(getViewLifecycleOwner(), integer -> {
             if (integer == 0) {
                 return;
@@ -93,15 +84,12 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
         startButton.setOnClickListener(this);
 
         sizeOperations = view.findViewById(R.id.textInputLayoutOperations);
-        sizeThreads = view.findViewById(R.id.textInputLayoutThreads);
         editSizeOperations = view.findViewById(R.id.textInputEditTextOperations);
-        editSizeThreads = view.findViewById(R.id.textInputEditTextThreads);
     }
 
     @Override
     public void onClick(View v) {
         String collectionSize = editSizeOperations.getText().toString().trim();
-        String poolSize = editSizeThreads.getText().toString().trim();
-        viewModel.calculateTime(collectionSize, poolSize);
+        viewModel.calculateTime(collectionSize);
     }
 }

@@ -23,7 +23,6 @@ public class CollectionsViewModel extends ViewModel {
     private final MutableLiveData<List<Items>> itemsList = new MutableLiveData<>();
     private final MutableLiveData<Integer> toastStatus = new MutableLiveData<>();
     private final MutableLiveData<Integer> sizeErrorStatus = new MutableLiveData<>();
-    private final MutableLiveData<Integer> poolErrorStatus = new MutableLiveData<>();
 
     public CollectionsViewModel(Benchmark benchmark) {
         this.benchmark = benchmark;
@@ -37,18 +36,7 @@ public class CollectionsViewModel extends ViewModel {
         itemsList.setValue(benchmark.generateCollectionItems(false));
     }
 
-    public void calculateTime(String collectionSize, String poolSize) {
-        int threads;
-        try {
-            threads = Integer.parseInt(poolSize);
-            poolErrorStatus.setValue(null);
-        } catch (NumberFormatException e) {
-            poolErrorStatus.setValue(R.string.invalidInput);
-            threads = -1;
-        }
-        if (threads == 0){
-            poolErrorStatus.setValue(R.string.invalidNumber);
-        }
+    public void calculateTime(String collectionSize) {
         int size;
         try {
             size = Integer.parseInt(collectionSize);
@@ -57,7 +45,7 @@ public class CollectionsViewModel extends ViewModel {
             sizeErrorStatus.setValue(R.string.invalidInput);
             size = -1;
         }
-        if (threads > 0 && size > 0) {
+        if (size > 0) {
 
             if (toastStatus.getValue() != R.string.startingCalc) {
                 toastStatus.setValue(R.string.startingCalc);
@@ -69,8 +57,8 @@ public class CollectionsViewModel extends ViewModel {
                 final int benchmarkSize = size;
                 final AtomicReference<Items> calcItem = new AtomicReference<>();
 
-               for (int i = 0; i < list.size(); i++) {
-                   Disposable disposable = Observable.just(list.get(i))
+                for (int i = 0; i < list.size(); i++) {
+                    Disposable disposable = Observable.just(list.get(i))
                             .subscribeOn(Schedulers.computation())
                             .doOnNext(item -> {
                                 calcItem.set(benchmark.measureTime(item, benchmarkSize));
@@ -114,14 +102,10 @@ public class CollectionsViewModel extends ViewModel {
         return sizeErrorStatus;
     }
 
-    public LiveData<Integer> getPoolErrorStatus() {
-        return poolErrorStatus;
-    }
-
     @Override
     protected void onCleared() {
         super.onCleared();
-        if(!compositeDisposable.isDisposed()) {
+        if (!compositeDisposable.isDisposed()) {
             compositeDisposable.dispose();
         }
         compositeDisposable.clear();
