@@ -1,25 +1,24 @@
 package ua.com.foxminded.collectionsandmaps;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
-import javax.inject.Inject;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CollectionsViewModel extends ViewModel {
 
     private final Benchmark benchmark;
-    private final Handler handler = new Handler(Looper.myLooper());
-    private ExecutorService es;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final MutableLiveData<List<Items>> itemsList = new MutableLiveData<>();
     private final MutableLiveData<Integer> toastStatus = new MutableLiveData<>();
@@ -31,7 +30,7 @@ public class CollectionsViewModel extends ViewModel {
     }
 
     public void init() {
-        toastStatus.setValue(null);
+        toastStatus.setValue(0);
         if (itemsList.getValue() != null) {
             return;
         }
@@ -60,41 +59,38 @@ public class CollectionsViewModel extends ViewModel {
         }
         if (threads > 0 && size > 0) {
 
-            if (es == null) {
-                es = Executors.newFixedThreadPool(threads);
+            if (toastStatus.getValue() != R.string.startingCalc) {
                 toastStatus.setValue(R.string.startingCalc);
 
                 final List<Items> list = benchmark.generateCollectionItems(true);
                 itemsList.setValue(list);
+
                 final AtomicInteger counter = new AtomicInteger(list.size());
                 final int benchmarkSize = size;
-                for (int i = 0; i < list.size(); i++) {
-                    final int position = i;
-                    es.submit(() -> {
-                        final Items item = benchmark.measureTime(list.get(position), benchmarkSize);
-                        counter.getAndDecrement();
-                        handler.post(() -> updateList(list, position, item));
-                        if (counter.get() == 0) {
-                            handler.post(() -> stopPool(false));
-                        }
-                    });
-                }
+                final AtomicReference<Items> calcItem = new AtomicReference<>();
 
+               for (int i = 0; i < list.size(); i++) {
+                   Disposable disposable = Observable.just(list.get(i))
+                            .subscribeOn(Schedulers.computation())
+                            .doOnNext(item -> {
+                                calcItem.set(benchmark.measureTime(item, benchmarkSize));
+                                counter.getAndDecrement();
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(item -> {
+                                updateList(list, list.indexOf(item), calcItem.get());
+                                if (counter.get() == 0) {
+                                    toastStatus.setValue(R.string.endingCalc);
+                                }
+                            });
+                    compositeDisposable.add(disposable);
+                }
             } else {
-                stopPool(true);
+                toastStatus.setValue(R.string.stopCalc);
+                compositeDisposable.clear();
                 itemsList.setValue(benchmark.generateCollectionItems(false));
             }
         }
-    }
-
-    private void stopPool(boolean forced) {
-        if (forced) {
-            es.shutdownNow();
-        } else {
-            es.shutdown();
-        }
-        es = null;
-        toastStatus.setValue(forced ? R.string.stopCalc : R.string.endingCalc);
     }
 
     private void updateList(List<Items> list, int position, Items item) {
@@ -120,5 +116,14 @@ public class CollectionsViewModel extends ViewModel {
 
     public LiveData<Integer> getPoolErrorStatus() {
         return poolErrorStatus;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        if(!compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
+        }
+        compositeDisposable.clear();
     }
 }

@@ -73,7 +73,7 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
             }
         });
         viewModel.getToastStatus().observe(getViewLifecycleOwner(), integer -> {
-            if (integer == null) {
+            if (integer == 0) {
                 return;
             }
             if (integer == R.string.startingCalc) {
