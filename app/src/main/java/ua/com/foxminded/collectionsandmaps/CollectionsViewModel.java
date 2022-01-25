@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -48,31 +47,22 @@ public class CollectionsViewModel extends ViewModel {
         if (size > 0) {
 
             if (toastStatus.getValue() != R.string.startingCalc) {
-                toastStatus.setValue(R.string.startingCalc);
-
                 final List<Items> list = benchmark.generateCollectionItems(true);
-                itemsList.setValue(list);
-
-                final AtomicInteger counter = new AtomicInteger(list.size());
                 final int benchmarkSize = size;
                 final AtomicReference<Items> calcItem = new AtomicReference<>();
 
-                for (int i = 0; i < list.size(); i++) {
-                    Disposable disposable = Observable.just(list.get(i))
-                            .subscribeOn(Schedulers.computation())
-                            .doOnNext(item -> {
-                                calcItem.set(benchmark.measureTime(item, benchmarkSize));
-                                counter.getAndDecrement();
-                            })
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(item -> {
-                                updateList(list, list.indexOf(item), calcItem.get());
-                                if (counter.get() == 0) {
-                                    toastStatus.setValue(R.string.endingCalc);
-                                }
-                            });
-                    compositeDisposable.add(disposable);
-                }
+                Disposable disposable = Observable.just(list)
+                        .doOnSubscribe(items -> {
+                            toastStatus.setValue(R.string.startingCalc);
+                            itemsList.setValue(list);
+                        })
+                        .flatMap(items -> Observable.fromIterable(items)
+                                .subscribeOn(Schedulers.computation()))
+                        .doOnNext(item -> calcItem.set(benchmark.measureTime(item, benchmarkSize)))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doFinally(() -> toastStatus.setValue(R.string.endingCalc))
+                        .subscribe(item -> updateList(list, list.indexOf(item), calcItem.get()));
+                compositeDisposable.add(disposable);
             } else {
                 toastStatus.setValue(R.string.stopCalc);
                 compositeDisposable.clear();
@@ -108,6 +98,5 @@ public class CollectionsViewModel extends ViewModel {
         if (!compositeDisposable.isDisposed()) {
             compositeDisposable.dispose();
         }
-        compositeDisposable.clear();
     }
 }
