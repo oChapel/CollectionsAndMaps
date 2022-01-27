@@ -1,15 +1,23 @@
 package ua.com.foxminded.collectionsandmaps;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-public class MapsOperations {
+import javax.inject.Inject;
 
-    private static final Random randomNumber = new Random();
+public class MapsBenchmark implements Benchmark {
 
-    public static Items measureTime(Items item, int size) {
+    private final Random randomNumber = new Random();
+
+    public MapsBenchmark() {
+    }
+
+    @Override
+    public Items measureTime(Items item, int size) {
         final Map<Integer, Integer> map;
         if (item.name == R.string.treeMap) {
             map = new TreeMap<>();
@@ -28,13 +36,33 @@ public class MapsOperations {
         return new Items(item.operation, item.name, String.valueOf(time), false);
     }
 
-    public static void fillNewMap(int size, Map<Integer, Integer> map) {
+    @Override
+    public List<Items> generateCollectionItems(boolean visibilityFlag) {
+        final List<Items> items = new ArrayList<>();
+        //final String naMS = getContext().getResources().getString(R.string.NAms);
+        int[] idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
+                R.string.remFromMap};
+        int[] idArrType = new int[]{R.string.treeMap, R.string.hashMap};
+        for (int operation : idArrOperations) {
+            for (int listType : idArrType) {
+                items.add(new Items(operation, listType, "N/A"/*naMS*/, visibilityFlag));
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public int getSpanCount() {
+        return 2;
+    }
+
+    private static void fillNewMap(int size, Map<Integer, Integer> map) {
         for (int i = 0; i < size; i++) {
             map.put(i, 0);
         }
     }
 
-    private static float addingToMap(int size, Map<Integer, Integer> map) {
+    private float addingToMap(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.put(size, randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
@@ -42,7 +70,7 @@ public class MapsOperations {
         return (float) end / 1000000;
     }
 
-    private static float searchByKey(int size, Map<Integer, Integer> map) {
+    private float searchByKey(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.get(randomNumber.nextInt(size));
         long end = System.nanoTime() - start;
@@ -50,7 +78,7 @@ public class MapsOperations {
         return (float) end / 1000000;
     }
 
-    private static float removingFromMap(int size, Map<Integer, Integer> map) {
+    private float removingFromMap(int size, Map<Integer, Integer> map) {
         long start = System.nanoTime();
         map.remove(randomNumber.nextInt(size));
         long end = System.nanoTime() - start;

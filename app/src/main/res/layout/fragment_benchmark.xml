@@ -12,56 +12,23 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/operationsTxt"
-        app:layout_constraintBottom_toTopOf="@id/threadsTxtView"
-        app:layout_constraintEnd_toStartOf="@id/guideLine1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/threadsTxtView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="@string/threadsTxt"
         app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/operationsTxtView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutOperations"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:errorEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/textInputLayoutThreads"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toStartOf="@id/guideLine2"
         app:layout_constraintStart_toEndOf="@id/guideLine1"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditTextOperations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center"
-            android:inputType="number">
-
-        </com.google.android.material.textfield.TextInputEditText>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutThreads"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"
-        app:layout_constraintEnd_toStartOf="@id/guideLine2"
-        app:layout_constraintStart_toEndOf="@id/guideLine1"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutOperations">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditTextThreads"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -91,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutThreads" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutOperations" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideLine1"
