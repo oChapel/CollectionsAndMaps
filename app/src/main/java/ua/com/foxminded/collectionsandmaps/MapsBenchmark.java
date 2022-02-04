@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-import javax.inject.Inject;
-
 public class MapsBenchmark implements Benchmark {
 
     private final Random randomNumber = new Random();
