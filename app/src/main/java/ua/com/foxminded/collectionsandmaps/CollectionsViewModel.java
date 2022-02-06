@@ -60,7 +60,11 @@ public class CollectionsViewModel extends ViewModel {
                                 .subscribeOn(Schedulers.computation()))
                         .doOnNext(item -> calcItem.set(benchmark.measureTime(item, benchmarkSize)))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doFinally(() -> toastStatus.setValue(R.string.endingCalc))
+                        .doFinally(() -> {
+                            if (toastStatus.getValue() == R.string.startingCalc) {
+                                toastStatus.setValue(R.string.endingCalc);
+                            }
+                        })
                         .subscribe(item -> updateList(list, list.indexOf(item), calcItem.get()));
                 compositeDisposable.add(disposable);
             } else {
