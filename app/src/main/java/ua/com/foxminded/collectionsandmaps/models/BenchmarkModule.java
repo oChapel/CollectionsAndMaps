@@ -1,9 +1,12 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Benchmark;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.CollectionsBenchmark;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.MapsBenchmark;
 
 @Module
 public class BenchmarkModule {

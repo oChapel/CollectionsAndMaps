@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import ua.com.foxminded.collectionsandmaps.R;
+import ua.com.foxminded.collectionsandmaps.ui.benchmark.adapter.CollectionsRecyclerAdapter;
 
 public class CollectionsFragment extends Fragment implements View.OnClickListener {
 

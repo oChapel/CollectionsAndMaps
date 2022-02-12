@@ -1,8 +1,10 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark.adapter;
 
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
+
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Items;
 
 public class ItemsDiffUtilCallback extends DiffUtil.Callback {
 
@@ -26,15 +28,13 @@ public class ItemsDiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        Items oldItem = oldList.get(oldItemPosition);
-        Items newItem = newList.get(newItemPosition);
+        final Items oldItem = oldList.get(oldItemPosition);
+        final Items newItem = newList.get(newItemPosition);
         return oldItem.name == newItem.name && oldItem.operation == newItem.operation;
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        Items oldItem = oldList.get(oldItemPosition);
-        Items newItem = newList.get(newItemPosition);
-        return oldItem.equals(newItem);
+        return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
     }
 }

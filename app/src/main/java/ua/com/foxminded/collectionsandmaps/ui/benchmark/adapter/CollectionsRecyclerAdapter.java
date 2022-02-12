@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.com.foxminded.collectionsandmaps.R;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Items;
+
 public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<CollectionsRecyclerAdapter.CollectionsHolder> {
 
     private final List<Items> items = new ArrayList<>();
@@ -21,11 +24,11 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
     }
 
     public void setItems(List<Items> newItems) {
-        ItemsDiffUtilCallback itemsDiffUtilCallback = new ItemsDiffUtilCallback(items, newItems);
-        DiffUtil.DiffResult itemsDiffUtilResults = DiffUtil.calculateDiff(itemsDiffUtilCallback);
+        final List<Items> oldList = new ArrayList<>(items);
         this.items.clear();
         this.items.addAll(newItems);
-        itemsDiffUtilResults.dispatchUpdatesTo(this);
+        DiffUtil.calculateDiff(new ItemsDiffUtilCallback(oldList, items))
+                .dispatchUpdatesTo(this);
     }
 
     @Override
@@ -36,8 +39,9 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
     @NonNull
     @Override
     public CollectionsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark,parent, false);
-        return new CollectionsHolder(view);
+        return new CollectionsHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_benchmark, parent, false)
+        );
     }
 
     @Override
@@ -52,10 +56,10 @@ public class CollectionsRecyclerAdapter extends RecyclerView.Adapter<Collections
 
     static class CollectionsHolder extends RecyclerView.ViewHolder {
 
-        final private TextView arrayType;
-        final private ProgressBar progressBar;
-        final private TextView calcTime;
-        final private int shortAnimationDuration = itemView.getResources().getInteger(android.R.integer.config_shortAnimTime);
+        private final int shortAnimationDuration = itemView.getResources().getInteger(android.R.integer.config_shortAnimTime);
+        private final TextView arrayType;
+        private final ProgressBar progressBar;
+        private final TextView calcTime;
 
         public CollectionsHolder(@NonNull View itemView) {
             super(itemView);
