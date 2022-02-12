@@ -55,12 +55,14 @@ public class CollectionsViewModel extends ViewModel {
                         .doOnSubscribe(items -> {
                             toastStatus.setValue(R.string.startingCalc);
                             itemsList.setValue(list);
+                            EspressoIdlingResource.increment();
                         })
                         .flatMap(items -> Observable.fromIterable(items)
                                 .subscribeOn(Schedulers.computation()))
                         .doOnNext(item -> calcItem.set(benchmark.measureTime(item, benchmarkSize)))
                         .observeOn(AndroidSchedulers.mainThread())
                         .doFinally(() -> {
+                            EspressoIdlingResource.decrement();
                             if (toastStatus.getValue() == R.string.startingCalc) {
                                 toastStatus.setValue(R.string.endingCalc);
                             }
