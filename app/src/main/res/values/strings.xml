@@ -7,7 +7,6 @@
     </string-array>
 
     <string name="operationsTxt">Operations</string>
-    <string name="threadsTxt">Threads</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
 
@@ -16,8 +15,6 @@
     <string name="stopCalc">Calculations stopped</string>
 
     <string name="invalidInput">Invalid input</string>
-    <string name="invalidNumber">Must not be zero</string>
-    <string name="NAms">N/A</string>
     <string name="ms">%1$s ms</string>
 
     <string name="addToStart">Adding to the start</string>

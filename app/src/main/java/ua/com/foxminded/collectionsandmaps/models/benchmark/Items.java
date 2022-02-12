@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
 
 import java.util.Objects;
 

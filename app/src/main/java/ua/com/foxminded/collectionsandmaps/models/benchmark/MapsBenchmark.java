@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
-import javax.inject.Inject;
+import ua.com.foxminded.collectionsandmaps.R;
 
 public class MapsBenchmark implements Benchmark {
 
@@ -23,7 +23,9 @@ public class MapsBenchmark implements Benchmark {
             map = new TreeMap<>();
         } else if (item.name == R.string.hashMap) {
             map = new HashMap<>();
-        } else throw new RuntimeException("Unknown type: " + item.name);
+        } else {
+            throw new RuntimeException("Unknown type: " + item.name);
+        }
         fillNewMap(size, map);
         float time;
         if (item.operation == R.string.addToMap) {
@@ -32,17 +34,18 @@ public class MapsBenchmark implements Benchmark {
             time = searchByKey(size, map);
         } else if (item.operation == R.string.remFromMap) {
             time = removingFromMap(size, map);
-        } else throw new RuntimeException("Unknown operation: " + item.operation);
+        } else {
+            throw new RuntimeException("Unknown operation: " + item.operation);
+        }
         return new Items(item.operation, item.name, String.valueOf(time), false);
     }
 
     @Override
     public List<Items> generateCollectionItems(boolean visibilityFlag) {
-        final List<Items> items = new ArrayList<>();
-        //final String naMS = getContext().getResources().getString(R.string.NAms);
-        int[] idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
+        final int[] idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
                 R.string.remFromMap};
-        int[] idArrType = new int[]{R.string.treeMap, R.string.hashMap};
+        final int[] idArrType = new int[]{R.string.treeMap, R.string.hashMap};
+        final List<Items> items = new ArrayList<>(idArrOperations.length * idArrType.length);
         for (int operation : idArrOperations) {
             for (int listType : idArrType) {
                 items.add(new Items(operation, listType, "N/A"/*naMS*/, visibilityFlag));
@@ -63,26 +66,23 @@ public class MapsBenchmark implements Benchmark {
     }
 
     private float addingToMap(int size, Map<Integer, Integer> map) {
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         map.put(size, randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float searchByKey(int size, Map<Integer, Integer> map) {
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         map.get(randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float removingFromMap(int size, Map<Integer, Integer> map) {
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         map.remove(randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 }

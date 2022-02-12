@@ -1,12 +1,14 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import androidx.annotation.NonNull;
-
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import ua.com.foxminded.collectionsandmaps.models.BenchmarkComponent;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Benchmark;
 
 public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
@@ -14,7 +16,8 @@ public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFa
     private final BenchmarkComponent component = DaggerBenchmarkComponent.create();
 
     @Inject
-    @Named("collectionsBenchmark") Benchmark collectionsBenchmark;
+    @Named("collectionsBenchmark")
+    Benchmark collectionsBenchmark;
 
     @Inject
     @Named("mapsBenchmark") Benchmark mapsBenchmark;

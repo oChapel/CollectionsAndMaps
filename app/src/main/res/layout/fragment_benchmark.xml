@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CollectionsFragment">
+    tools:context=".ui.benchmark.CollectionsFragment">
 
     <TextView
         android:id="@+id/operationsTxtView"
@@ -73,6 +73,5 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.7" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
