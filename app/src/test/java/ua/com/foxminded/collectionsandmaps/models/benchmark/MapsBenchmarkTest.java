@@ -1,21 +1,23 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import ua.com.foxminded.collectionsandmaps.R;
 
 public class MapsBenchmarkTest {
 
-    private Benchmark mapsBenchmark;
+    private final Benchmark mapsBenchmark = new MapsBenchmark();
     private List<Items> mapsList;
     private int size;
 
     @Before
     public void setUp() {
-        this.mapsBenchmark = new MapsBenchmark();
         this.mapsList = mapsBenchmark.generateCollectionItems(true);
         this.size = 1000000;
     }

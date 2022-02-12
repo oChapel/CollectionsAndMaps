@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import ua.com.foxminded.collectionsandmaps.models.BenchmarkComponent;
+import ua.com.foxminded.collectionsandmaps.models.DaggerBenchmarkComponent;
 import ua.com.foxminded.collectionsandmaps.models.benchmark.Benchmark;
 
 public class CollectionsViewModelFactory extends ViewModelProvider.NewInstanceFactory {

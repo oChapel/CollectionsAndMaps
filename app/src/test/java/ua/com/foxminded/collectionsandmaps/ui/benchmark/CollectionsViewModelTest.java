@@ -1,4 +1,9 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark;
+
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
@@ -13,10 +18,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import ua.com.foxminded.collectionsandmaps.R;
+import ua.com.foxminded.collectionsandmaps.TrampolineSchedulerRule;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Benchmark;
+import ua.com.foxminded.collectionsandmaps.models.benchmark.Items;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionsViewModelTest {
@@ -27,10 +32,14 @@ public class CollectionsViewModelTest {
     @Rule
     public TrampolineSchedulerRule schedulerRule = new TrampolineSchedulerRule();
 
-    @Mock Benchmark benchmark;
-    @Mock Observer<Integer> toastObserver;
-    @Mock Observer<Integer> errorObserver;
-    @Mock Observer<List<Items>> itemListObserver;
+    @Mock
+    Benchmark benchmark;
+    @Mock
+    Observer<Integer> toastObserver;
+    @Mock
+    Observer<Integer> errorObserver;
+    @Mock
+    Observer<List<Items>> itemListObserver;
     private CollectionsViewModel viewModel;
     private String size;
 
@@ -50,7 +59,8 @@ public class CollectionsViewModelTest {
         viewModel.getItemsList().removeObserver(itemListObserver);
     }
 
-    public void verifyInit() {
+    @Test
+    public void testInit() {
         viewModel.init();
         verify(toastObserver).onChanged(0);
         verify(itemListObserver).onChanged(benchmark.generateCollectionItems(false));
@@ -59,13 +69,7 @@ public class CollectionsViewModelTest {
     }
 
     @Test
-    public void testInit() {
-        verifyInit();
-    }
-
-    @Test
     public void testCalculateTime() throws InterruptedException {
-        verifyInit();
         viewModel.calculateTime(size);
         verify(toastObserver).onChanged(R.string.startingCalc);
         verify(itemListObserver, times(2)).onChanged(anyList());
@@ -75,7 +79,6 @@ public class CollectionsViewModelTest {
 
     @Test
     public void testStopCalculateTime() {
-        verifyInit();
         viewModel.calculateTime(size);
         verify(toastObserver).onChanged(R.string.startingCalc);
         viewModel.calculateTime(size);
