@@ -41,7 +41,7 @@ public class CollectionsViewModelTest {
     @Mock
     Observer<List<Items>> itemListObserver;
     private CollectionsViewModel viewModel;
-    private String size;
+    private final String size = "1000000";
 
     @Before
     public void setUp() {
@@ -49,7 +49,6 @@ public class CollectionsViewModelTest {
         viewModel.getToastStatus().observeForever(toastObserver);
         viewModel.getSizeErrorStatus().observeForever(errorObserver);
         viewModel.getItemsList().observeForever(itemListObserver);
-        size = "1000000";
     }
 
     @After
@@ -59,37 +58,48 @@ public class CollectionsViewModelTest {
         viewModel.getItemsList().removeObserver(itemListObserver);
     }
 
+    private void verifyNoMore() {
+        verifyNoMoreInteractions(toastObserver);
+        verifyNoMoreInteractions(itemListObserver);
+        verifyNoMoreInteractions(errorObserver);
+    }
+
     @Test
     public void testInit() {
         viewModel.init();
+
         verify(toastObserver).onChanged(0);
         verify(itemListObserver).onChanged(benchmark.generateCollectionItems(false));
-        verifyNoMoreInteractions(toastObserver);
-        verifyNoMoreInteractions(itemListObserver);
+        verifyNoMore();
     }
 
     @Test
     public void testCalculateTime() throws InterruptedException {
         viewModel.calculateTime(size);
+
         verify(toastObserver).onChanged(R.string.startingCalc);
         verify(itemListObserver, times(2)).onChanged(anyList());
         Thread.sleep(1000);
         verify(toastObserver).onChanged(R.string.endingCalc);
+        verifyNoMore();
     }
 
     @Test
     public void testStopCalculateTime() {
         viewModel.calculateTime(size);
+
         verify(toastObserver).onChanged(R.string.startingCalc);
         viewModel.calculateTime(size);
         verify(toastObserver).onChanged(R.string.stopCalc);
         verify(itemListObserver, times(3)).onChanged(anyList());
+        verifyNoMore();
     }
 
     @Test
     public void testCalculateTimeError() {
         viewModel.calculateTime("abc");
+
         verify(errorObserver).onChanged(R.string.invalidInput);
-        verifyNoMoreInteractions(errorObserver);
+        verifyNoMore();
     }
 }
