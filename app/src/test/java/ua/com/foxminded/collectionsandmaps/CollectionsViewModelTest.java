@@ -56,6 +56,7 @@ public class CollectionsViewModelTest {
         verify(itemListObserver).onChanged(benchmark.generateCollectionItems(false));
         verifyNoMoreInteractions(toastObserver);
         verifyNoMoreInteractions(itemListObserver);
+        verifyNoMoreInteractions(errorObserver);
     }
 
     @Test
