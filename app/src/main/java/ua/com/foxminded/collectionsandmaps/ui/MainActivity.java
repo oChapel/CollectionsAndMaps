@@ -1,13 +1,14 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import ua.com.foxminded.collectionsandmaps.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,12 +19,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 pager2 = findViewById(R.id.viewPager);
+        final TabLayout tabLayout = findViewById(R.id.tabLayout);
+        final ViewPager2 pager2 = findViewById(R.id.viewPager);
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentAdapter adapter = new FragmentAdapter(fm, getLifecycle());
-        pager2.setAdapter(adapter);
+        pager2.setAdapter(new FragmentAdapter(getSupportFragmentManager(), getLifecycle()));
 
         tabLayoutMediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) ->
                 tab.setText(getResources().getStringArray(R.array.collectionsMapsTXT)[position]));

@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import ua.com.foxminded.collectionsandmaps.R;
 
 public class CollectionsBenchmark implements Benchmark {
 
@@ -23,7 +25,9 @@ public class CollectionsBenchmark implements Benchmark {
             list = new LinkedList<>(Collections.nCopies(size, 0));
         } else if (item.name == R.string.copyOnWriterList) {
             list = new CopyOnWriteArrayList<>(Collections.nCopies(size, 0));
-        } else throw new RuntimeException("Unknown type: " + item.name);
+        } else {
+            throw new RuntimeException("Unknown type: " + item.name);
+        }
         list.add(randomNumber.nextInt(size), 1);
         float time;
         if (item.operation == R.string.addToStart) {
@@ -40,18 +44,19 @@ public class CollectionsBenchmark implements Benchmark {
             time = calcRemovingFromMiddle(list);
         } else if (item.operation == R.string.remFromEnd) {
             time = calcRemovingFromEnd(list);
-        } else throw new RuntimeException("Unknown operation: " + item.operation);
+        } else {
+            throw new RuntimeException("Unknown operation: " + item.operation);
+        }
         return new Items(item.operation, item.name, String.valueOf(time), false);
     }
 
     @Override
     public List<Items> generateCollectionItems(boolean visibilityFlag) {
-        final List<Items> items = new ArrayList<>();
-        //final String naMS = getContext().getResources().getString(R.string.NAms);
-        int[] idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
+        final int[] idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
                 R.string.addToEnd, R.string.searchByValue, R.string.remFromStart,
                 R.string.remFromMiddle, R.string.remFromEnd};
-        int[] idArrType = new int[]{R.string.arrayList, R.string.linkedList, R.string.copyOnWriterList};
+        final int[] idArrType = new int[]{R.string.arrayList, R.string.linkedList, R.string.copyOnWriterList};
+        final List<Items> items = new ArrayList<>(idArrOperations.length * idArrType.length);
         for (int operation : idArrOperations) {
             for (int listType : idArrType) {
                 items.add(new Items(operation, listType, "N/A"/*naMS*/, visibilityFlag));
@@ -66,65 +71,51 @@ public class CollectionsBenchmark implements Benchmark {
     }
 
     private float calcAddingToStart(int size, List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.add(0, randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float calcAddingToMiddle(int size, List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.add(array.size() / 2, randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float calcAddingToEnd(int size, List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.add(array.size(), randomNumber.nextInt(size));
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float searchByValue(List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.indexOf(1);
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float calcRemovingFromBeginning(List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.remove(0);
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
     private float calcRemovingFromMiddle(List<Integer> array) {
-
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         array.remove(array.size() / 2);
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+        return (System.nanoTime() - start) / 1000000F;
     }
 
    private float calcRemovingFromEnd(List<Integer> array) {
-
-        long start = System.nanoTime();
+       final long start = System.nanoTime();
         array.remove(array.size() - 1);
-        long end = System.nanoTime() - start;
 
-        return (float) end / 1000000;
+       return (System.nanoTime() - start) / 1000000F;
     }
 }

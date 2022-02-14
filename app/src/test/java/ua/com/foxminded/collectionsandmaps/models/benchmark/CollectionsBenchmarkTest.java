@@ -1,21 +1,18 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import ua.com.foxminded.collectionsandmaps.R;
 
 public class CollectionsBenchmarkTest {
 
-    private Benchmark collectionsBenchmark;
-
-    @Before
-    public void setUp() {
-        this.collectionsBenchmark = new CollectionsBenchmark();
-    }
+    private Benchmark collectionsBenchmark = new CollectionsBenchmark();
 
     @Test
     public void testMeasureTime() {

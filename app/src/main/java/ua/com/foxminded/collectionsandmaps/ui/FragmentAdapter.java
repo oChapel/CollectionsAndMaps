@@ -1,10 +1,12 @@
-package ua.com.foxminded.collectionsandmaps;
+package ua.com.foxminded.collectionsandmaps.ui;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import ua.com.foxminded.collectionsandmaps.ui.benchmark.CollectionsFragment;
 
 public class FragmentAdapter extends FragmentStateAdapter {
 
