@@ -3,7 +3,6 @@ package ua.com.foxminded.collectionsandmaps.models.benchmark;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import ua.com.foxminded.collectionsandmaps.R;
 
 public class CollectionsBenchmarkTest {
 
-    private Benchmark collectionsBenchmark = new CollectionsBenchmark();
+    private final Benchmark collectionsBenchmark = new CollectionsBenchmark();
 
     @Test
     public void testMeasureTime() {

@@ -1,12 +1,10 @@
 package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
+
+import io.reactivex.rxjava3.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.List;
 
@@ -74,31 +77,45 @@ public class CollectionsViewModelTest {
     }
 
     @Test
-    public void testCalculateTime() throws InterruptedException {
+    public void testCalculateTime() {
+        RxJavaPlugins.setComputationSchedulerHandler(scheduler -> ImmediateThinScheduler.INSTANCE);
         viewModel.calculateTime(size);
 
+        verify(toastObserver).onChanged(0);
+        verify(errorObserver).onChanged(null);
         verify(toastObserver).onChanged(R.string.startingCalc);
-        verify(itemListObserver, times(2)).onChanged(anyList());
-        Thread.sleep(1000);
         verify(toastObserver).onChanged(R.string.endingCalc);
+        verify(itemListObserver).onChanged(anyList());
         verifyNoMore();
+
+        RxJavaPlugins.reset();
     }
 
+    /*
+     Actual invocations:
+      -> onChanged(0)
+      -> onChanged(Calculations started)
+      -> onChanged(Calculations ended)
+      -> onChanged(Calculations started)
+     */
     @Test
     public void testStopCalculateTime() {
         viewModel.calculateTime(size);
 
+        verify(toastObserver).onChanged(0);
         verify(toastObserver).onChanged(R.string.startingCalc);
         viewModel.calculateTime(size);
         verify(toastObserver).onChanged(R.string.stopCalc);
-        verify(itemListObserver, times(3)).onChanged(anyList());
+        verify(itemListObserver, times(2)).onChanged(anyList());
         verifyNoMore();
+
     }
 
     @Test
     public void testCalculateTimeError() {
         viewModel.calculateTime("abc");
 
+        verify(toastObserver).onChanged(0);
         verify(errorObserver).onChanged(R.string.invalidInput);
         verifyNoMore();
     }

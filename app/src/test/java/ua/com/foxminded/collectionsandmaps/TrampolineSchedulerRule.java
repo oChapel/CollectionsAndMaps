@@ -14,8 +14,8 @@ public final class TrampolineSchedulerRule implements TestRule {
         return new Statement()  {
             @Override
             public void evaluate() throws Throwable {
+                RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
                 try {
-                    RxAndroidPlugins.setInitMainThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
                     base.evaluate();
                 } finally {
                     RxAndroidPlugins.reset();
