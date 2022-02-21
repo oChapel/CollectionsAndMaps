@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps.ui;
+package ua.com.foxminded.collectionsandmaps.models.benchmark;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
@@ -18,6 +18,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import ua.com.foxminded.collectionsandmaps.CustomItemMatchers;
+import ua.com.foxminded.collectionsandmaps.ui.MainActivity;
 import ua.com.foxminded.collectionsandmaps.R;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
@@ -53,7 +54,7 @@ public class CollectionsFragmentTest {
 
     @Test
     public void testStopCalculations() {
-        onView(withId(R.id.textInputEditTextOperations)).perform(typeText("3000000"));
+        onView(withId(R.id.textInputEditTextOperations)).perform(typeText("5000000"));
         onView(withId(R.id.startButton)).perform(doubleClick());
         onView(withId(R.id.startButton)).check(matches(withText("START")));
         onView(withText(R.string.stopCalc))

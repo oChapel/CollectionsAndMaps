@@ -23,11 +23,22 @@ public class MapsBenchmarkTest {
 
     @Test
     public void testGenerateCollectionItems() {
-        List<Items> mapsList = mapsBenchmark.generateCollectionItems(true);
-        assertEquals(
-                mapsList.get(3),
-                new Items(R.string.searchByKey, R.string.hashMap, "N/A", true)
-        );
+        List<Items> collectionsList = mapsBenchmark.generateCollectionItems(true);
+
+        final int[] idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
+                R.string.remFromMap};
+        final int[] idArrType = new int[]{R.string.treeMap, R.string.hashMap};
+
+        int i = 0;
+        for (int operation : idArrOperations) {
+            for (int listType : idArrType) {
+                assertEquals(
+                        collectionsList.get(i),
+                        new Items(operation, listType, "N/A", true)
+                );
+                i++;
+            }
+        }
     }
 
     @Test

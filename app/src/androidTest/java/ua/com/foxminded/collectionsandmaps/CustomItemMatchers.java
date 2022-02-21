@@ -40,9 +40,6 @@ public class CustomItemMatchers {
         };
     }
 
-    /**
-     * Author: http://www.qaautomated.com/2016/01/how-to-test-toast-message-using-espresso.html
-     */
     public static class ToastMatcher extends TypeSafeMatcher<Root> {
 
         @Override

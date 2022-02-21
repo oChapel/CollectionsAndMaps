@@ -91,13 +91,6 @@ public class CollectionsViewModelTest {
         RxJavaPlugins.reset();
     }
 
-    /*
-     Actual invocations:
-      -> onChanged(0)
-      -> onChanged(Calculations started)
-      -> onChanged(Calculations ended)
-      -> onChanged(Calculations started)
-     */
     @Test
     public void testStopCalculateTime() {
         viewModel.calculateTime(size);
@@ -106,6 +99,7 @@ public class CollectionsViewModelTest {
         verify(toastObserver).onChanged(R.string.startingCalc);
         viewModel.calculateTime(size);
         verify(toastObserver).onChanged(R.string.stopCalc);
+        verify(errorObserver, times(2)).onChanged(null);
         verify(itemListObserver, times(2)).onChanged(anyList());
         verifyNoMore();
 
