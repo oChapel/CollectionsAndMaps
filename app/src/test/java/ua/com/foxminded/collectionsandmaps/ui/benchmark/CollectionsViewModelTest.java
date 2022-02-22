@@ -18,7 +18,10 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ua.com.foxminded.collectionsandmaps.R;
@@ -52,6 +55,9 @@ public class CollectionsViewModelTest {
         viewModel.getToastStatus().observeForever(toastObserver);
         viewModel.getSizeErrorStatus().observeForever(errorObserver);
         viewModel.getItemsList().observeForever(itemListObserver);
+
+        when(benchmark.generateCollectionItems(true)).thenReturn(generateTestList(true));
+        when(benchmark.generateCollectionItems(false)).thenReturn(generateTestList(false));
     }
 
     @After
@@ -67,12 +73,16 @@ public class CollectionsViewModelTest {
         verifyNoMoreInteractions(errorObserver);
     }
 
+    private List<Items> generateTestList(boolean visibilityFlag) {
+        return new ArrayList<>(Collections.nCopies(10, new Items(0, 0, "N/A", visibilityFlag)));
+    }
+
     @Test
     public void testInit() {
         viewModel.init();
 
         verify(toastObserver).onChanged(0);
-        verify(itemListObserver).onChanged(benchmark.generateCollectionItems(false));
+        verify(itemListObserver).onChanged(generateTestList(false));
         verifyNoMore();
     }
 
@@ -83,9 +93,10 @@ public class CollectionsViewModelTest {
 
         verify(toastObserver).onChanged(0);
         verify(errorObserver).onChanged(null);
+        verify(itemListObserver).onChanged(generateTestList(true));
         verify(toastObserver).onChanged(R.string.startingCalc);
         verify(toastObserver).onChanged(R.string.endingCalc);
-        verify(itemListObserver).onChanged(anyList());
+        verify(itemListObserver, times(10)).onChanged(anyList());
         verifyNoMore();
 
         RxJavaPlugins.reset();
@@ -97,12 +108,14 @@ public class CollectionsViewModelTest {
 
         verify(toastObserver).onChanged(0);
         verify(toastObserver).onChanged(R.string.startingCalc);
+        verify(itemListObserver).onChanged(generateTestList(true));
+
         viewModel.calculateTime(size);
+
         verify(toastObserver).onChanged(R.string.stopCalc);
         verify(errorObserver, times(2)).onChanged(null);
-        verify(itemListObserver, times(2)).onChanged(anyList());
+        verify(itemListObserver).onChanged(generateTestList(false));
         verifyNoMore();
-
     }
 
     @Test
