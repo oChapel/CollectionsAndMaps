@@ -15,15 +15,14 @@ public class MapsBenchmarkTest {
 
     @Test
     public void testMeasureTime() {
-        List<Items> mapsList = mapsBenchmark.generateCollectionItems(true);
-        int size = 1000000;
-        Items mapItem = mapsBenchmark.measureTime(mapsList.get(0), size);
+        final List<Items> mapsList = mapsBenchmark.generateCollectionItems(true);
+        final Items mapItem = mapsBenchmark.measureTime(mapsList.get(0), 1000000);
         assertFalse(mapItem.progressBarFlag);
     }
 
     @Test
     public void testGenerateCollectionItems() {
-        List<Items> collectionsList = mapsBenchmark.generateCollectionItems(true);
+        final List<Items> collectionsList = mapsBenchmark.generateCollectionItems(true);
 
         final int[] idArrOperations = new int[]{R.string.addToMap, R.string.searchByKey,
                 R.string.remFromMap};
@@ -48,15 +47,13 @@ public class MapsBenchmarkTest {
 
     @Test(expected = RuntimeException.class)
     public void testInvalidOperation() {
-        int size = 1000000;
-        Items item1 = new Items(0, R.string.hashMap, "0", false);
-        mapsBenchmark.measureTime(item1, size);
+        final Items item1 = new Items(0, R.string.hashMap, "0", false);
+        mapsBenchmark.measureTime(item1, 1000000);
     }
 
     @Test(expected = RuntimeException.class)
     public void testInvalidName() {
-        int size = 1000000;
-        Items item1 = new Items(R.string.searchByKey, 0, "0", false);
-        mapsBenchmark.measureTime(item1, size);
+        final Items item1 = new Items(R.string.searchByKey, 0, "0", false);
+        mapsBenchmark.measureTime(item1, 1000000);
     }
 }

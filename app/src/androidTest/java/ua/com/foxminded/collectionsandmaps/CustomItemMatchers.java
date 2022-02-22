@@ -23,15 +23,11 @@ public class CustomItemMatchers {
                     return false;
                 }
 
-                CharSequence error = ((TextInputLayout) view).getError();
-
+                final CharSequence error = ((TextInputLayout) view).getError();
                 if (error == null) {
                     return false;
                 }
-
-                String hint = error.toString();
-
-                return expectedErrorText.equals(hint);
+                return expectedErrorText.equals(error.toString());
             }
 
             @Override
@@ -49,10 +45,10 @@ public class CustomItemMatchers {
 
         @Override
         public boolean matchesSafely(Root root) {
-            int type = root.getWindowLayoutParams().get().type;
+            final int type = root.getWindowLayoutParams().get().type;
             if ((type == WindowManager.LayoutParams.TYPE_TOAST)) {
-                IBinder windowToken = root.getDecorView().getWindowToken();
-                IBinder appToken = root.getDecorView().getApplicationWindowToken();
+                final IBinder windowToken = root.getDecorView().getWindowToken();
+                final IBinder appToken = root.getDecorView().getApplicationWindowToken();
                 return windowToken == appToken;
             }
             return false;

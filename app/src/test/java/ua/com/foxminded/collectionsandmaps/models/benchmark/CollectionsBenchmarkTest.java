@@ -15,15 +15,14 @@ public class CollectionsBenchmarkTest {
 
     @Test
     public void testMeasureTime() {
-        List<Items> collectionsList = collectionsBenchmark.generateCollectionItems(true);
-        int size = 1000000;
-        Items collectionItem = collectionsBenchmark.measureTime(collectionsList.get(0), size);
+        final List<Items> collectionsList = collectionsBenchmark.generateCollectionItems(true);
+        final Items collectionItem = collectionsBenchmark.measureTime(collectionsList.get(0), 1000000);
         assertFalse(collectionItem.progressBarFlag);
     }
 
     @Test
     public void testGenerateCollectionItems() {
-        List<Items> collectionsList = collectionsBenchmark.generateCollectionItems(true);
+        final List<Items> collectionsList = collectionsBenchmark.generateCollectionItems(true);
 
         final int[] idArrOperations = new int[]{R.string.addToStart, R.string.addToMiddle,
                 R.string.addToEnd, R.string.searchByValue, R.string.remFromStart,
@@ -49,15 +48,13 @@ public class CollectionsBenchmarkTest {
 
     @Test(expected = RuntimeException.class)
     public void testInvalidOperation() {
-        int size = 1000000;
-        Items item0 = new Items(0, R.string.arrayList, "0", false);
-        collectionsBenchmark.measureTime(item0, size);
+        final Items item0 = new Items(0, R.string.arrayList, "0", false);
+        collectionsBenchmark.measureTime(item0, 1000000);
     }
 
     @Test(expected = RuntimeException.class)
     public void testInvalidName() {
-        int size = 1000000;
-        Items item0 = new Items(R.string.addToStart, 0, "0", false);
-        collectionsBenchmark.measureTime(item0, size);
+        final Items item0 = new Items(R.string.addToStart, 0, "0", false);
+        collectionsBenchmark.measureTime(item0, 1000000);
     }
 }

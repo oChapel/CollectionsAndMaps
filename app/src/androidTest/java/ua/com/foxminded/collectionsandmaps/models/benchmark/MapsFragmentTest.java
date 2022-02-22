@@ -20,7 +20,7 @@ public class MapsFragmentTest extends CollectionsFragmentTest {
     @Before
     public void setUp() {
         scenarioRule.getScenario().onActivity(activity -> {
-            ViewPager2 viewPager = activity.findViewById(R.id.viewPager);
+            final ViewPager2 viewPager = activity.findViewById(R.id.viewPager);
             viewPager.setCurrentItem(1, false);
         });
     }
