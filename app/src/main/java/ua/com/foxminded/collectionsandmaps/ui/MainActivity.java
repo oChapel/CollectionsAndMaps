@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        App.setComponentInt(0);
+
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
         final ViewPager2 pager2 = findViewById(R.id.viewPager);
 
