@@ -12,7 +12,7 @@ import ua.com.foxminded.collectionsandmaps.R;
 import ua.com.foxminded.collectionsandmaps.ui.MainActivity;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
-public class MapsFragmentTest extends CollectionsFragmentTest {
+public class MapsFragmentTest extends FragmentTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> scenarioRule = new ActivityScenarioRule<>(MainActivity.class);
