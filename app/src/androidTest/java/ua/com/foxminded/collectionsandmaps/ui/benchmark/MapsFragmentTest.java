@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps.models.benchmark;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;

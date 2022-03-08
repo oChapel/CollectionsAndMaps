@@ -9,6 +9,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import ua.com.foxminded.collectionsandmaps.R;
+import ua.com.foxminded.collectionsandmaps.models.DaggerBenchmarkComponent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        App.setComponentInt(0);
+        App.setAppComponent(DaggerBenchmarkComponent.create());
 
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
         final ViewPager2 pager2 = findViewById(R.id.viewPager);

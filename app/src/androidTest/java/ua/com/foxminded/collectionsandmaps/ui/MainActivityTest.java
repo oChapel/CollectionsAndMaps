@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps.ui.benchmark;
+package ua.com.foxminded.collectionsandmaps.ui;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

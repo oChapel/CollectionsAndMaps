@@ -1,4 +1,4 @@
-package ua.com.foxminded.collectionsandmaps.models.benchmark;
+package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -19,6 +19,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import ua.com.foxminded.collectionsandmaps.CustomItemMatchers;
 import ua.com.foxminded.collectionsandmaps.R;
+import ua.com.foxminded.collectionsandmaps.models.DaggerTestComponent;
 import ua.com.foxminded.collectionsandmaps.ui.App;
 import ua.com.foxminded.collectionsandmaps.ui.MainActivity;
 
@@ -29,7 +30,7 @@ public class FragmentTest {
 
     @Before
     public void setUp() {
-        App.setComponentInt(1);
+        App.setAppComponent(DaggerTestComponent.create());
     }
 
     @Test
@@ -61,7 +62,7 @@ public class FragmentTest {
     @Test
     public void testStopCalculations() {
         onView(withId(R.id.textInputEditTextOperations))
-                .perform(typeText("1000000"));
+                .perform(typeText("1000000"), closeSoftKeyboard());
         onView(withId(R.id.startButton)).perform(doubleClick());
         onView(withId(R.id.startButton)).check(matches(withText("START")));
         onView(withText(R.string.stopCalc))
