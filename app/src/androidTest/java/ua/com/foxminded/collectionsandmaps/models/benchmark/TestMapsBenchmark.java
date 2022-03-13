@@ -5,7 +5,7 @@ public class TestMapsBenchmark extends MapsBenchmark {
     @Override
     public Items measureTime(Items item, int size) {
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

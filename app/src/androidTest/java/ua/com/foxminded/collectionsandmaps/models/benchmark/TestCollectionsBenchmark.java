@@ -5,7 +5,7 @@ public class TestCollectionsBenchmark extends CollectionsBenchmark{
     @Override
     public Items measureTime(Items item, int size) {
         try {
-            Thread.sleep(500);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
