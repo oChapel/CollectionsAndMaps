@@ -1,9 +1,11 @@
 package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -94,5 +96,9 @@ public class CollectionsFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         String collectionSize = editSizeOperations.getText().toString().trim();
         viewModel.calculateTime(collectionSize);
+        if (getActivity().getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }

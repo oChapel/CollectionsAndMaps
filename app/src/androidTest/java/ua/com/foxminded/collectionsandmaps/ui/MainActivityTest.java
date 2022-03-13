@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ua.com.foxminded.collectionsandmaps.R;
-import ua.com.foxminded.collectionsandmaps.ui.MainActivity;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainActivityTest {

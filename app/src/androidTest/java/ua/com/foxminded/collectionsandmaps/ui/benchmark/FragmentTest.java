@@ -1,15 +1,15 @@
 package ua.com.foxminded.collectionsandmaps.ui.benchmark;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.doubleClick;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -49,9 +49,9 @@ public class FragmentTest {
 
     @Test
     public void testInitCalculations() {
-        onView(withId(R.id.textInputEditTextOperations))
-                .perform(typeText("1000000"), closeSoftKeyboard());
+        onView(withId(R.id.textInputEditTextOperations)).perform(typeText("1000000"));
         onView(withId(R.id.startButton)).perform(click());
+        onView(withId(R.id.viewPager)).perform(swipeUp());
         onView(withId(R.id.startButton)).check(matches(withText("START")));
         onView(withText(R.string.endingCalc))
                 .inRoot(new CustomItemMatchers.ToastMatcher())
@@ -61,9 +61,15 @@ public class FragmentTest {
 
     @Test
     public void testStopCalculations() {
-        onView(withId(R.id.textInputEditTextOperations))
-                .perform(typeText("1000000"), closeSoftKeyboard());
-        onView(withId(R.id.startButton)).perform(doubleClick());
+        onView(withId(R.id.textInputEditTextOperations)).perform(typeText("1000000"));
+        onView(withId(R.id.startButton)).perform(click());
+        onView(withId(R.id.startButton)).check(matches(withText("STOP")));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.startButton)).perform(click());
         onView(withId(R.id.startButton)).check(matches(withText("START")));
         onView(withText(R.string.stopCalc))
                 .inRoot(new CustomItemMatchers.ToastMatcher())
