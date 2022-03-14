@@ -5,10 +5,20 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.Before;
@@ -51,10 +61,6 @@ public class FragmentTest {
         onView(withId(R.id.startButton)).check(matches(withText("START")));
         onView(withId(R.id.startButton)).perform(click());
         onView(withId(R.id.viewPager)).perform(swipeUp());
-//        onView(withText(R.string.endingCalc))
-//                .inRoot(new CustomItemMatchers.ToastMatcher())
-//                .check(matches(isDisplayed()))
-//                .check(matches(withText("Calculations ended")));
     }
 
     @Test
@@ -78,5 +84,61 @@ public class FragmentTest {
                 .inRoot(new CustomItemMatchers.ToastMatcher())
                 .check(matches(isDisplayed()))
                 .check(matches(withText("Calculations stopped")));
+    }
+
+    @Test
+    public void testValidItems() {
+        final AtomicReference<RecyclerView> recyclerView = new AtomicReference<>();
+        scenarioRule.getScenario().onActivity(activity ->
+                recyclerView.set(activity.findViewById(R.id.recyclerView)));
+        final int count = recyclerView.get().getAdapter().getItemCount();
+        final GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.get().getLayoutManager();
+
+        for (int i = 0; i < count; i++) {
+            checkLastCompletelyVisibleItem(i, layoutManager);
+            onView(withId(R.id.recyclerView))
+                    .check(matches(CustomItemMatchers.atRecyclerViewPosition(
+                            i, hasDescendant(allOf(withId(R.id.calcTime), withText("N/A ms")))
+                    )))
+                    .check(matches(CustomItemMatchers.atRecyclerViewPosition(
+                            i, hasDescendant(allOf(withId(R.id.progressBar), not(isDisplayed())))
+                    )));
+        }
+
+        onView(withId(R.id.recyclerView)).perform(scrollToPosition(0));
+        onView(withId(R.id.textInputEditTextOperations)).perform(typeText("1000000"));
+        onView(withId(R.id.startButton)).perform(click());
+
+        for (int i = 0; i < count; i++) {
+            checkLastCompletelyVisibleItem(i, layoutManager);
+            onView(withId(R.id.recyclerView))
+                    .check(matches(CustomItemMatchers.atRecyclerViewPosition(
+                            i, hasDescendant(allOf(withId(R.id.progressBar), isDisplayed()))
+                    )));
+        }
+
+        onView(withId(R.id.recyclerView)).perform(scrollToPosition(0));
+        try {
+            Thread.sleep(count * 1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < count; i++) {
+            checkLastCompletelyVisibleItem(i, layoutManager);
+            onView(withId(R.id.recyclerView))
+                    .check(matches(CustomItemMatchers.atRecyclerViewPosition(
+                            i, hasDescendant(allOf(withId(R.id.calcTime), withText("1000 ms")))
+                    )))
+                    .check(matches(CustomItemMatchers.atRecyclerViewPosition(
+                            i, hasDescendant(allOf(withId(R.id.progressBar), not(isDisplayed())))
+                    )));
+        }
+    }
+
+    private void checkLastCompletelyVisibleItem(int i, GridLayoutManager layoutManager) {
+        if (i >= layoutManager.findLastCompletelyVisibleItemPosition()) {
+            onView(withId(R.id.viewPager)).perform(swipeUp());
+        }
     }
 }

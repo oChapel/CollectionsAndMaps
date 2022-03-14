@@ -26,4 +26,9 @@ public class CollectionsFragmentTest extends FragmentTest {
     public void testStopCalculations() {
         super.testStopCalculations();
     }
+
+    @Override
+    public void testValidItems() {
+        super.testValidItems();
+    }
 }
